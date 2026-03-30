@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet - Financial Atelier</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+<body class="bg-[#fcf9f8] pb-24">
+    <main class="p-6 max-w-xl mx-auto space-y-8">
+        <section class="bg-gradient-to-br from-blue-700 to-blue-500 rounded-2xl p-8 text-white shadow-xl">
+            <span class="text-xs uppercase opacity-70 font-bold tracking-widest">Total Balance</span>
+            <h2 class="text-5xl font-black mt-2" id="wallet-balance">৳ 0.00</h2>
+        </section>
+
+        <section class="bg-white p-6 rounded-2xl shadow-sm space-y-4">
+            <h3 class="font-bold text-xl">Withdraw Funds</h3>
+            <select id="method" class="w-full p-3 bg-gray-50 border-none rounded-lg font-bold">
+                <option value="bKash">bKash</option>
+                <option value="Nagad">Nagad</option>
+                <option value="Rocket">Rocket</option>
+            </select>
+            <input type="number" id="amount" placeholder="Amount (Minimum ৳50)" class="w-full p-3 bg-gray-50 border-none rounded-lg font-bold">
+            <input type="text" id="account" placeholder="Account Number" class="w-full p-3 bg-gray-50 border-none rounded-lg font-bold">
+            <button onclick="handleWithdraw()" id="btn" class="w-full py-4 bg-blue-600 text-white rounded-xl font-bold shadow-lg hover:bg-blue-700 active:scale-95 transition-all">Confirm Withdrawal</button>
+        </section>
+    </main>
+
+    <nav class="fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-md border-t flex justify-around py-4">
+        <a href="index.html" class="text-gray-400 flex flex-col items-center"><span class="material-symbols-outlined">dashboard</span><span class="text-[10px] uppercase font-bold">Studio</span></a>
+        <a href="wallet.html" class="text-blue-600 flex flex-col items-center"><span class="material-symbols-outlined">account_balance_wallet</span><span class="text-[10px] uppercase font-bold">Wallet</span></a>
+        <a href="profile.html" class="text-gray-400 flex flex-col items-center"><span class="material-symbols-outlined">person</span><span class="text-[10px] uppercase font-bold">Profile</span></a>
+    </nav>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAtYq8JTQXdMmrwhc3W96g7KfqThZcTA_4",
+            authDomain: "onlineincome-326f9.firebaseapp.com",
+            databaseURL: "https://onlineincome-326f9-default-rtdb.firebaseio.com",
+            projectId: "onlineincome-326f9",
+            storageBucket: "onlineincome-326f9.firebasestorage.app",
+            messagingSenderId: "79088960253",
+            appId: "1:79088960253:web:4a39dbe9d3207ccca1f494",
+            measurementId: "G-2DQF1FCGRW"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const auth = firebase.auth();
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                db.ref('users/' + user.uid + '/balance').on('value', snap => {
+                    document.getElementById('wallet-balance').innerText = "৳ " + (snap.val() || 0).toFixed(2);
+                    window.currentBalance = snap.val() || 0;
+                });
+            } else { window.location.href = "login.html"; }
+        });
+
+        async function handleWithdraw() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const account = document.getElementById('account').value;
+            const method = document.getElementById('method').value;
+
+            if (amount < 50 || amount > window.currentBalance) return alert("Insufficient Balance or Invalid Amount!");
+            if (!account) return alert("Please enter account number!");
+
+            const btn = document.getElementById('btn');
+            btn.disabled = true; btn.innerText = "Processing...";
+
+            const user = auth.currentUser;
+            const withdrawRef = db.ref('withdrawals').push();
+            await withdrawRef.set({ userId: user.uid, amount, account, method, status: "Pending", timestamp: Date.now() });
+            await db.ref('users/' + user.uid).update({ balance: window.currentBalance - amount });
+
+            alert("Withdrawal Request Submitted!");
+            btn.disabled = false; btn.innerText = "Confirm Withdrawal";
+        }
+    </script>
+</body>
+</html>
