@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Prosper - Financial Atelier</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-container": "#cee8ff",
+              "surface-container-highest": "#e5e2e1",
+              "on-tertiary": "#ffffff",
+              "primary-fixed": "#dde1ff",
+              "outline": "#737688",
+              "tertiary-fixed": "#cae6ff",
+              "secondary-container": "#5cfd80",
+              "on-background": "#1c1b1b",
+              "error": "#ba1a1a",
+              "on-error": "#ffffff",
+              "inverse-on-surface": "#f3f0ef",
+              "surface-dim": "#dcd9d9",
+              "inverse-primary": "#b7c4ff",
+              "surface-bright": "#fcf9f8",
+              "surface-container-low": "#f6f3f2",
+              "outline-variant": "#c3c5d9",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "on-surface": "#1c1b1b",
+              "surface": "#fcf9f8",
+              "secondary": "#006e2a",
+              "secondary-fixed-dim": "#3ce36a",
+              "primary-fixed-dim": "#b7c4ff",
+              "surface-tint": "#004ced",
+              "error-container": "#ffdad6",
+              "secondary-fixed": "#69ff87",
+              "on-tertiary-fixed-variant": "#004b70",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-fixed": "#002108",
+              "on-secondary-container": "#00732c",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#313030",
+              "primary": "#003ec7",
+              "tertiary": "#00537b",
+              "surface-variant": "#e5e2e1",
+              "on-primary-container": "#dfe3ff",
+              "surface-container-high": "#ebe7e7",
+              "tertiary-container": "#006c9f",
+              "background": "#fcf9f8",
+              "on-primary-fixed-variant": "#0038b6",
+              "surface-container": "#f0edec",
+              "on-surface-variant": "#434656",
+              "on-tertiary-fixed": "#001e30",
+              "on-primary-fixed": "#001452",
+              "tertiary-fixed-dim": "#8dcdff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .editorial-gradient {
+            background: linear-gradient(135deg, #003ec7 0%, #0052ff 100%);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(24px);
+        }
+        [v-cloak] { display: none; }
+        .spinner {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            width: 1.25rem;
+            height: 1.25rem;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary-container selection:text-on-primary-container min-h-screen flex items-center justify-center p-6">
+<!-- Main Container: Asymmetric Editorial Layout -->
+<main class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-0 overflow-hidden bg-surface-container-lowest rounded-[2rem] shadow-[0px_10px_32px_rgba(28,27,27,0.04)]">
+<!-- Left Side: Brand Narrative & Visual (Hidden on mobile) -->
+<section class="hidden lg:flex lg:col-span-7 relative overflow-hidden editorial-gradient flex-col justify-between p-16 text-white">
+<div class="relative z-10">
+<div class="flex items-center gap-3 mb-12">
+<div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="account_balance">account_balance</span>
+</div>
+<span class="font-headline font-black tracking-tighter text-2xl">Financial Atelier</span>
+</div>
+<h1 class="font-headline font-extrabold text-6xl leading-[1.1] tracking-tight mb-6">
+                    Crafting your <br/>
+                    wealth with <br/>
+<span class="text-secondary-fixed">precision.</span>
+</h1>
+<p class="text-primary-fixed-dim text-xl max-w-md font-light leading-relaxed">
+                    Moving beyond spreadsheets. Prosper treats your financial growth as a fine art, providing the tools to nurture every earning.
+                </p>
+</div>
+<div class="relative z-10 mt-auto">
+<div class="flex gap-4 items-center">
+<div class="flex -space-x-4">
+<img alt="portrait of a confident female professional" class="w-12 h-12 rounded-full border-2 border-primary object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrv9ZkkucaObxWsXh2UkP9uXcquhKzr7nxUvy43yv9p6PEX_4FDvRkdr-xVNc0YwbSgQ4EPGYAcSICX7UFUMK_-iZT7FhAIXVaqahISF9aXdXgf2EdArtwMVsbwRy760fgcuD90l4KEESrlHO1T2dDEF-YHjDNlIf-EU6XCz1xUjXNIblGrQ9Nzkc5VBh7pr_YYvm2KwvqfgU12wV_JEhUwctxv5hs9DpKT0flcKmm1MnKpzkqpB_pIyedhN-Emw1hlkjzspfJ28Y"/>
+<img alt="smiling young man" class="w-12 h-12 rounded-full border-2 border-primary object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4-AK6PthuSGJj5iN3BJHRz37O1O5kGYspi1gaAh63a667tvP_WOyfQACB98VL5jSu9Ep6ba6Z2A_HKrw-Tkkf4tSAwFlclgaq3gifXPl_Xv9SjTo8KLGbVf3WXWGVZhcV4Abadqonholm_kNeB7Hwak_I7iGV35DtHNGCfmDk93gtdxZ1HrQU3kO98YmpcPhHpo819yFKiTCiAyh2mTEeSWQo6Bl1eXDXf-c3RzkpujC27U37uSShpSLUNQ3v2NFHOrdutE2jh_o"/>
+<img alt="elegant woman" class="w-12 h-12 rounded-full border-2 border-primary object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDM-PnCFWqp-LBgdYNHCGznZr3BVUc-XyXMBzWGNHmSmHiuUDaempy6C2RSSORJXqEKbg3D63MW-29DSBEF6K2MdRmJH9HKTWaNY1saLleGpPKXeUBoid6LeFpIxTQ-OOvQPx3oY2uSW87xRZkIeiLaFvJRGXFKjFZGP0vmsoo7Rp72R_vgNcSYclwC7hpGuokIzSt6T3AblGssklY7f3XMDXFm5vXshCVMe9eDaB6FHK3jNKHCofGF2xvkhzTLRSFnGH3M0rn2viM"/>
+</div>
+<p class="text-sm font-medium opacity-80">Joined by 12,000+ artisans of finance</p>
+</div>
+</div>
+<!-- Decorative Texture -->
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+<img alt="abstract textures" class="w-full h-full object-cover mix-blend-overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCamp-MbjzpRAuFExaK4pxwojuu6pOkPs5sECDLVkTdj1-XiC7uEqzWEXLcn1SSa17QUQXtaU9odCHML74Gv6bbYd_8Vb5QnkhJ6RbTN871wzSNWOVZhL4-K2WmeakmV-eC0f2Okkhv-6UpfUdm0z4So4ydKLQJ8cfUKuzoWtGbCB92XDeSaLdY5OUhURxiAcR0ZndMmtY4ihXTx5khYGmMqSAldXv-IrwCybtLQb592yiR_YNdutQY7YyQCEI8gFBXAdQWICDZvQ"/>
+</div>
+</section>
+<!-- Right Side: Interaction Canvas -->
+<section class="col-span-1 lg:col-span-5 flex flex-col p-8 md:p-12 lg:p-16 bg-surface-container-lowest min-h-[600px]" id="auth-app">
+<!-- Mobile Brand Mark -->
+<div class="lg:hidden flex items-center gap-2 mb-12">
+<span class="font-headline font-black tracking-tighter text-primary text-xl">Financial Atelier</span>
+</div>
+<!-- Login View -->
+<div class="flex-grow flex flex-col" id="login-view">
+<div class="mb-10">
+<span class="font-label text-primary text-xs font-bold tracking-[0.2em] uppercase mb-2 block">The Entrance</span>
+<h2 class="font-headline font-extrabold text-4xl text-on-surface tracking-tight">Welcome back</h2>
+<p class="text-on-surface-variant mt-3 font-light">Continue your journey in the atelier.</p>
+</div>
+<form class="space-y-6" id="login-form">
+<div class="space-y-2">
+<label class="font-label text-xs font-semibold text-on-surface-variant ml-1">Email</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="alternate_email">alternate_email</span>
+</div>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-high border-none rounded-xl focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all duration-200 placeholder:text-outline/50 font-medium" id="login-email" placeholder="artisan@prosper.com" required="" type="email"/>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between items-center px-1">
+<label class="font-label text-xs font-semibold text-on-surface-variant">Password</label>
+<a class="text-[11px] font-bold text-primary hover:underline uppercase tracking-wider" href="#">Forgot?</a>
+</div>
+<div class="relative group">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="lock">lock</span>
+</div>
+<input class="w-full pl-12 pr-12 py-4 bg-surface-container-high border-none rounded-xl focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all duration-200 placeholder:text-outline/50 font-medium" id="login-password" placeholder="••••••••" required="" type="password"/>
+</div>
+</div>
+<button class="w-full editorial-gradient text-white font-headline font-bold py-4 rounded-xl shadow-[0px_10px_20px_rgba(0,62,199,0.15)] hover:scale-[1.02] active:scale-95 transition-all duration-200 mt-4 flex items-center justify-center gap-2" type="submit">
+<span class="btn-text">Sign In to Atelier</span>
+<div class="spinner hidden"></div>
+</button>
+<p class="text-error text-xs font-medium text-center hidden" id="login-error"></p>
+</form>
+<!-- Divider -->
+<div class="relative my-10">
+<div class="absolute inset-0 flex items-center">
+<div class="w-full border-t border-outline-variant/30"></div>
+</div>
+<div class="relative flex justify-center text-xs uppercase tracking-widest font-bold">
+<span class="bg-surface-container-lowest px-4 text-outline">or connect via</span>
+</div>
+</div>
+<!-- Social Logins -->
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-3 px-6 py-3 bg-surface-container-low hover:bg-surface-container-high transition-colors rounded-xl font-medium text-sm text-on-surface-variant">
+<img alt="Google" class="w-5 h-5 grayscale opacity-70" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYeEmq_q3fcGrL0zQhGtLli9ZMsD2Fl97ZNYx0qL9_xW9MXm45f2UG-zaEfEcoa6IvGW7WZhDagSJxqls_N3ocPUeRldG3Qmq9sg01grlH3e1oszPXOruoF5mavQfjmcvlbGH7yTpBmPPPvVfDG4n4TP9eU3JqO4G5oD-0x8ipEGgMp4h8HwV4vb-BX_G7DzFKTSG77l1G8nFxLzg1gnxlzn3IdhnLh6xIRJgYlUj_Vk2gsUcGtg7ipORTUzwGqL1QTEPIPQcEbPs"/>
+<span>Google</span>
+</button>
+<button class="flex items-center justify-center gap-3 px-6 py-3 bg-surface-container-low hover:bg-surface-container-high transition-colors rounded-xl font-medium text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" data-icon="brand_awareness">brand_awareness</span>
+<span>Apple</span>
+</button>
+</div>
+<div class="mt-auto pt-12 text-center">
+<p class="text-sm text-on-surface-variant font-medium">
+                        New to the atelier? 
+                        <button class="text-primary font-bold hover:underline ml-1" onclick="toggleAuth('signup')">Create Account</button>
+</p>
+</div>
+</div>
+<!-- Signup View -->
+<div class="hidden flex-grow flex flex-col" id="signup-view">
+<div class="mb-10">
+<span class="font-label text-primary text-xs font-bold tracking-[0.2em] uppercase mb-2 block">The Studio</span>
+<h2 class="font-headline font-extrabold text-4xl text-on-surface tracking-tight">Become an artisan</h2>
+<p class="text-on-surface-variant mt-3 font-light">Begin crafting your financial future today.</p>
+</div>
+<form class="space-y-4" id="signup-form">
+<div class="space-y-2">
+<label class="font-label text-xs font-semibold text-on-surface-variant ml-1">Full Name</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="person">person</span>
+</div>
+<input class="w-full pl-12 pr-4 py-3.5 bg-surface-container-high border-none rounded-xl focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all duration-200 placeholder:text-outline/50 font-medium" id="signup-name" placeholder="Leonardo da Vinci" required="" type="text"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label text-xs font-semibold text-on-surface-variant ml-1">Email</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="alternate_email">alternate_email</span>
+</div>
+<input class="w-full pl-12 pr-4 py-3.5 bg-surface-container-high border-none rounded-xl focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all duration-200 placeholder:text-outline/50 font-medium" id="signup-email" placeholder="artisan@prosper.com" required="" type="email"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label text-xs font-semibold text-on-surface-variant ml-1">Password</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="lock">lock</span>
+</div>
+<input class="w-full pl-12 pr-12 py-3.5 bg-surface-container-high border-none rounded-xl focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all duration-200 placeholder:text-outline/50 font-medium" id="signup-password" placeholder="••••••••" required="" type="password"/>
+</div>
+</div>
+<button class="w-full editorial-gradient text-white font-headline font-bold py-4 rounded-xl shadow-[0px_10px_20px_rgba(0,62,199,0.15)] hover:scale-[1.02] active:scale-95 transition-all duration-200 mt-4 flex items-center justify-center gap-2" type="submit">
+<span class="btn-text">Join the Atelier</span>
+<div class="spinner hidden"></div>
+</button>
+<p class="text-error text-xs font-medium text-center hidden" id="signup-error"></p>
+</form>
+<div class="mt-auto pt-12 text-center">
+<p class="text-sm text-on-surface-variant font-medium">
+                        Already an artisan? 
+                        <button class="text-primary font-bold hover:underline ml-1" onclick="toggleAuth('login')">Sign In</button>
+</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Background Decorative Elements -->
+<div class="fixed top-0 left-0 w-full h-full -z-10 opacity-40 pointer-events-none">
+<div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-secondary/5 blur-[120px] rounded-full"></div>
+</div>
+<!-- Firebase SDKs -->
+<script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAtYq8JTQXdMmrwhc3W96g7KfqThZcTA_4",
+            authDomain: "onlineincome-326f9.firebaseapp.com",
+            projectId: "onlineincome-326f9",
+            storageBucket: "onlineincome-326f9.firebasestorage.app",
+            messagingSenderId: "79088960253",
+            appId: "1:79088960253:web:4a39dbe9d3207ccca1f494",
+            measurementId: "G-2DQF1FCGRW"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // UI Helpers
+        window.toggleAuth = (view) => {
+            const loginView = document.getElementById('login-view');
+            const signupView = document.getElementById('signup-view');
+            if (view === 'signup') {
+                loginView.classList.add('hidden');
+                signupView.classList.remove('hidden');
+            } else {
+                loginView.classList.remove('hidden');
+                signupView.classList.add('hidden');
+            }
+        };
+
+        const setLoading = (formId, isLoading) => {
+            const form = document.getElementById(formId);
+            const btnText = form.querySelector('.btn-text');
+            const spinner = form.querySelector('.spinner');
+            const btn = form.querySelector('button[type="submit"]');
+            
+            if (isLoading) {
+                btnText.classList.add('hidden');
+                spinner.classList.remove('hidden');
+                btn.disabled = true;
+                btn.style.opacity = '0.7';
+            } else {
+                btnText.classList.remove('hidden');
+                spinner.classList.add('hidden');
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            }
+        };
+
+        // Login Logic
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const errorEl = document.getElementById('login-error');
+            
+            errorEl.classList.add('hidden');
+            setLoading('login-form', true);
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                errorEl.textContent = error.message;
+                errorEl.classList.remove('hidden');
+                setLoading('login-form', false);
+            }
+        });
+
+        // Signup Logic
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const errorEl = document.getElementById('signup-error');
+
+            errorEl.classList.add('hidden');
+            setLoading('signup-form', true);
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Create user document in Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    name: name,
+                    email: email,
+                    balance: 0,
+                    createdAt: new Date().toISOString()
+                });
+
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                errorEl.textContent = error.message;
+                errorEl.classList.remove('hidden');
+                setLoading('signup-form', false);
+            }
+        });
+
+        // Redirect if already logged in
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
+</body></html>
