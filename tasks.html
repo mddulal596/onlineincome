@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tasks - Prosper</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary": "#00537b",
+              "surface-container-low": "#f6f3f2",
+              "surface": "#fcf9f8",
+              "on-tertiary-container": "#cee8ff",
+              "background": "#fcf9f8",
+              "on-tertiary-fixed": "#001e30",
+              "tertiary-fixed": "#cae6ff",
+              "surface-container-high": "#ebe7e7",
+              "tertiary-container": "#006c9f",
+              "secondary-fixed": "#69ff87",
+              "on-secondary": "#ffffff",
+              "surface-tint": "#004ced",
+              "secondary-container": "#5cfd80",
+              "surface-container": "#f0edec",
+              "tertiary-fixed-dim": "#8dcdff",
+              "on-tertiary": "#ffffff",
+              "on-secondary-container": "#00732c",
+              "on-primary-fixed": "#001452",
+              "inverse-on-surface": "#f3f0ef",
+              "surface-container-highest": "#e5e2e1",
+              "on-secondary-fixed": "#002108",
+              "surface-variant": "#e5e2e1",
+              "primary-container": "#0052ff",
+              "error-container": "#ffdad6",
+              "on-surface": "#1c1b1b",
+              "on-primary": "#ffffff",
+              "on-background": "#1c1b1b",
+              "on-error": "#ffffff",
+              "on-primary-fixed-variant": "#0038b6",
+              "surface-container-lowest": "#ffffff",
+              "on-error-container": "#93000a",
+              "inverse-primary": "#b7c4ff",
+              "surface-bright": "#fcf9f8",
+              "inverse-surface": "#313030",
+              "primary-fixed-dim": "#b7c4ff",
+              "primary": "#003ec7",
+              "outline-variant": "#c3c5d9",
+              "surface-dim": "#dcd9d9",
+              "outline": "#737688",
+              "error": "#ba1a1a",
+              "primary-fixed": "#dde1ff",
+              "on-surface-variant": "#434656",
+              "on-primary-container": "#dfe3ff",
+              "on-tertiary-fixed-variant": "#004b70",
+              "secondary-fixed-dim": "#3ce36a",
+              "on-secondary-fixed-variant": "#00531e",
+              "secondary": "#006e2a"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-40 bg-[#fcf9f8] dark:bg-[#1c1b1b]">
+<div class="flex items-center justify-between px-6 h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container/20">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="Professional headshot of a smiling young man in a blue shirt with soft studio lighting and a clean background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoact80ccW36MEoxrEFmtgLUGC3vnQ4pLeOISUqegBG81M1rm9SViU3005Po0pozCU_TeRdirErmq83QrqKeoU39nDqs6j1iq38Ln0FnohI63XmhHJ-HsK8OJcMpw5bfmAWCA41Z9zHQzk8mrJQI9tL1yOPfTxshgrqCoyD0lWxlwntvkhLE-srmUegBY4isjR6ImOrx3ZEMwzGkF0QWG__wfUr4hG3-WyzisH54D-xzaCnhsMI3T3yaahpA6eKrfvxgd8CtMEKf0"/>
+</div>
+<h1 class="font-['Manrope'] text-2xl font-bold tracking-tighter text-[#003ec7] dark:text-[#5cfd80]">Prosper</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-xl hover:bg-[#f6f3f2] dark:hover:bg-[#2a2a2a] transition-colors scale-95 active:duration-150">
+<span class="material-symbols-outlined text-on-surface">search</span>
+</button>
+<button class="p-2 rounded-xl hover:bg-[#f6f3f2] dark:hover:bg-[#2a2a2a] transition-colors scale-95 active:duration-150">
+<span class="material-symbols-outlined text-on-surface" data-icon="filter_list">filter_list</span>
+</button>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 pt-6 space-y-8">
+<!-- Daily Progress Section (Financial Atelier "Hero" style) -->
+<section class="relative overflow-hidden bg-surface-container-lowest rounded-2xl p-6 shadow-[0px_10px_32px_rgba(28,27,27,0.04)]">
+<div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div class="space-y-1">
+<span class="font-['Inter'] text-[10px] font-medium tracking-widest uppercase text-primary">Overview</span>
+<h2 class="font-headline text-3xl font-extrabold tracking-tight text-on-surface">Daily Progress</h2>
+<p class="text-on-surface-variant text-sm">You are 80% through your daily goal.</p>
+</div>
+<div class="flex items-center gap-8">
+<div class="text-center">
+<p class="text-2xl font-headline font-bold text-secondary" id="tasks-count-today">12</p>
+<p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-medium">Completed</p>
+</div>
+<div class="w-32 h-32 relative flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-secondary-container/20" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-secondary" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-dasharray="364.4" stroke-dashoffset="72.8" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-lg font-headline font-extrabold">80%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Aesthetic decoration -->
+<div class="absolute -right-12 -top-12 w-48 h-48 bg-primary/5 rounded-full blur-3xl"></div>
+</section>
+<!-- Categories (Horizontal Scroll Chips) -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="font-headline text-lg font-bold tracking-tight">Browse Tasks</h3>
+</div>
+<div class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+<button class="whitespace-nowrap px-6 py-2.5 rounded-full bg-primary text-on-primary font-medium text-sm shadow-lg shadow-primary/20">All</button>
+<button class="whitespace-nowrap px-6 py-2.5 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high transition-colors font-medium text-sm">High Paying</button>
+<button class="whitespace-nowrap px-6 py-2.5 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high transition-colors font-medium text-sm">Easy</button>
+<button class="whitespace-nowrap px-6 py-2.5 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high transition-colors font-medium text-sm">Video</button>
+<button class="whitespace-nowrap px-6 py-2.5 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high transition-colors font-medium text-sm">App Install</button>
+</div>
+</section>
+<!-- Dynamic Task List (Skeleton/Placeholder) -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="task-list">
+<!-- Loading Skeletons -->
+<div class="animate-pulse bg-surface-container-low h-48 rounded-2xl"></div>
+<div class="animate-pulse bg-surface-container-low h-48 rounded-2xl"></div>
+<div class="animate-pulse bg-surface-container-low h-48 rounded-2xl"></div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-[#ffffff]/80 dark:bg-[#1c1b1b]/80 backdrop-blur-xl rounded-t-[1.5rem] shadow-[0px_-10px_32px_rgba(28,27,27,0.04)]">
+<a class="flex flex-col items-center justify-center text-[#1c1b1b]/40 dark:text-[#fcf9f8]/40 px-4 py-1 transition-all duration-300 ease-in-out transform active:scale-90 hover:text-[#003ec7]" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="payments">payments</span>
+<span class="font-['Inter'] text-[10px] font-medium tracking-widest uppercase">Earnings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#003ec7] dark:text-[#5cfd80] bg-[#0052ff]/10 dark:bg-[#5cfd80]/10 rounded-xl px-4 py-1 transition-all duration-300 ease-in-out transform active:scale-90" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="assignment">assignment</span>
+<span class="font-['Inter'] text-[10px] font-medium tracking-widest uppercase">Tasks</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1b1b]/40 dark:text-[#fcf9f8]/40 px-4 py-1 transition-all duration-300 ease-in-out transform active:scale-90 hover:text-[#003ec7]" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="trending_up">trending_up</span>
+<span class="font-['Inter'] text-[10px] font-medium tracking-widest uppercase">Growth</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1b1b]/40 dark:text-[#fcf9f8]/40 px-4 py-1 transition-all duration-300 ease-in-out transform active:scale-90 hover:text-[#003ec7]" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="settings">settings</span>
+<span class="font-['Inter'] text-[10px] font-medium tracking-widest uppercase">Settings</span>
+</a>
+</nav>
+<!-- Firebase SDKs -->
+<script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAtYq8JTQXdMmrwhc3W96g7KfqThZcTA_4",
+            authDomain: "onlineincome-326f9.firebaseapp.com",
+            projectId: "onlineincome-326f9",
+            storageBucket: "onlineincome-326f9.firebasestorage.app",
+            messagingSenderId: "79088960253",
+            appId: "1:79088960253:web:4a39dbe9d3207ccca1f494"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // UI Elements
+        const taskListContainer = document.getElementById('task-list');
+
+        // Check Auth State
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("User logged in:", user.uid);
+                fetchTasks();
+            } else {
+                console.log("No user logged in. Redirecting...");
+                // In a real app: window.location.href = 'login.html';
+            }
+        });
+
+        // Fetch Tasks from Firestore
+        function fetchTasks() {
+            const tasksCol = collection(db, 'tasks');
+            const q = query(tasksCol, orderBy('reward', 'desc'));
+
+            onSnapshot(q, (snapshot) => {
+                const tasks = [];
+                snapshot.forEach((doc) => {
+                    tasks.push({ id: doc.id, ...doc.data() });
+                });
+                renderTasks(tasks);
+            }, (error) => {
+                console.error("Error fetching tasks:", error);
+                // Fallback rendering for demo purposes if Firestore is empty/blocked
+                renderTasks([
+                    { title: "Install Mobile Wallet", reward: "25.00", time: "5 min", difficulty: "Easy", status: "New" },
+                    { title: "Watch Ad Campaign", reward: "5.50", time: "1 min", difficulty: "Easy", status: "Started" },
+                    { title: "Review Product UX", reward: "120.00", time: "15 min", difficulty: "Medium", status: "New" }
+                ]);
+            });
+        }
+
+        function renderTasks(tasks) {
+            if (tasks.length === 0) {
+                taskListContainer.innerHTML = `<div class="col-span-full py-12 text-center text-on-surface-variant italic">No tasks available yet.</div>`;
+                return;
+            }
+
+            taskListContainer.innerHTML = tasks.map(task => {
+                const statusColor = task.status === 'Completed' ? 'bg-secondary/10 text-secondary' : 
+                                  task.status === 'Started' ? 'bg-primary/10 text-primary' : 
+                                  'bg-on-surface/5 text-on-surface-variant';
+                
+                return `
+                <div class="group bg-surface-container-lowest p-6 rounded-2xl shadow-[0px_10px_32px_rgba(28,27,27,0.02)] border border-transparent hover:border-primary/10 transition-all duration-300">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${statusColor}">
+                            ${task.status}
+                        </span>
+                        <div class="text-right">
+                            <span class="block text-[10px] uppercase font-bold tracking-tighter text-on-surface-variant">Reward</span>
+                            <span class="text-xl font-headline font-extrabold text-secondary">৳${task.reward}</span>
+                        </div>
+                    </div>
+                    
+                    <h4 class="font-headline text-lg font-bold leading-tight mb-4 group-hover:text-primary transition-colors">${task.title}</h4>
+                    
+                    <div class="flex items-center gap-4 pt-4 border-t border-surface-container-low">
+                        <div class="flex items-center gap-1.5 text-xs text-on-surface-variant font-medium">
+                            <span class="material-symbols-outlined text-sm">schedule</span>
+                            ${task.time}
+                        </div>
+                        <div class="flex items-center gap-1.5 text-xs text-on-surface-variant font-medium">
+                            <span class="material-symbols-outlined text-sm">leaderboard</span>
+                            ${task.difficulty}
+                        </div>
+                    </div>
+
+                    <button class="w-full mt-6 py-3 rounded-xl bg-surface-container-low text-on-surface font-semibold text-sm hover:bg-primary hover:text-on-primary transition-all active:scale-95">
+                        Start Task
+                    </button>
+                </div>
+                `;
+            }).join('');
+        }
+    </script>
+</body></html>
