@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Financial Atelier</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+<body class="bg-[#fcf9f8] pb-24">
+    <main class="p-6 max-w-xl mx-auto text-center space-y-6">
+        <img id="user-img" src="https://via.placeholder.com/150" class="w-32 h-32 rounded-3xl mx-auto shadow-lg object-cover">
+        
+        <div>
+            <h2 id="profile-name" class="text-3xl font-black text-gray-800">Loading...</h2>
+            <p id="profile-email" class="text-gray-500 font-medium">...</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="bg-white p-4 rounded-2xl shadow-sm">
+                <p class="text-xs text-gray-400 uppercase font-bold">Referrals</p>
+                <p id="ref-count" class="text-xl font-bold text-blue-600">0</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl shadow-sm">
+                <p class="text-xs text-gray-400 uppercase font-bold">Status</p>
+                <p class="text-xl font-bold text-green-600">Active</p>
+            </div>
+        </div>
+
+        <button onclick="logout()" class="w-full py-4 bg-red-50 text-red-600 rounded-2xl font-bold hover:bg-red-100 transition-all">Sign Out</button>
+    </main>
+
+    <nav class="fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-md border-t flex justify-around py-4">
+        <a href="index.html" class="text-gray-400 flex flex-col items-center"><span class="material-symbols-outlined">dashboard</span><span class="text-[10px] uppercase font-bold">Studio</span></a>
+        <a href="wallet.html" class="text-gray-400 flex flex-col items-center"><span class="material-symbols-outlined">account_balance_wallet</span><span class="text-[10px] uppercase font-bold">Wallet</span></a>
+        <a href="profile.html" class="text-blue-600 flex flex-col items-center"><span class="material-symbols-outlined">person</span><span class="text-[10px] uppercase font-bold">Profile</span></a>
+    </nav>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAtYq8JTQXdMmrwhc3W96g7KfqThZcTA_4",
+            authDomain: "onlineincome-326f9.firebaseapp.com",
+            databaseURL: "https://onlineincome-326f9-default-rtdb.firebaseio.com",
+            projectId: "onlineincome-326f9",
+            storageBucket: "onlineincome-326f9.firebasestorage.app",
+            messagingSenderId: "79088960253",
+            appId: "1:79088960253:web:4a39dbe9d3207ccca1f494",
+            measurementId: "G-2DQF1FCGRW"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                document.getElementById('profile-name').innerText = user.displayName || "User";
+                document.getElementById('profile-email').innerText = user.email;
+                if(user.photoURL) document.getElementById('user-img').src = user.photoURL;
+                
+                db.ref('users/' + user.uid + '/referrals').on('value', snap => {
+                    document.getElementById('ref-count').innerText = snap.val() || 0;
+                });
+            } else { window.location.href = "login.html"; }
+        });
+
+        function logout() { auth.signOut().then(() => window.location.href = "login.html"); }
+    </script>
+</body>
+</html>
