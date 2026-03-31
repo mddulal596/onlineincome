@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wallet | Prosper</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
-<body class="pb-32 bg-[#fcf9f8]">
+<body class="bg-[#fcf9f8] pb-32">
     <header class="p-6 bg-white border-b sticky top-0 z-50 flex items-center gap-4">
         <a href="dashboard.html" class="text-gray-400"><span class="material-symbols-outlined">arrow_back_ios</span></a>
         <h1 class="text-xl font-bold text-[#003ec7]">My Wallet</h1>
     </header>
 
     <main class="p-6 max-w-xl mx-auto space-y-8">
-        <section class="bg-gradient-to-br from-[#003ec7] to-[#005eff] rounded-[32px] p-8 text-white shadow-xl">
-            <span class="text-xs uppercase opacity-70 font-bold tracking-widest">Total Balance</span>
-            <h2 class="text-5xl font-black mt-2" id="wallet-balance">৳ 0.00</h2>
+        <section class="bg-gradient-to-br from-[#003ec7] to-[#005eff] rounded-[40px] p-8 text-white shadow-xl">
+            <span class="text-xs uppercase opacity-70 font-bold tracking-widest">Available Balance</span>
+            <h2 class="text-5xl font-black mt-2 tracking-tighter" id="wallet-balance">৳ 0.00</h2>
         </section>
 
-        <section class="bg-white p-8 rounded-[32px] shadow-sm space-y-6 border border-gray-100">
+        <section class="bg-white p-8 rounded-[40px] shadow-sm space-y-6 border border-gray-100">
             <h3 class="font-bold text-xl text-gray-800">Withdraw Funds</h3>
             <div class="space-y-4">
                 <select id="method" class="w-full p-4 bg-gray-50 border-none rounded-2xl font-bold">
@@ -28,9 +28,9 @@
                     <option value="Nagad">Nagad</option>
                     <option value="Rocket">Rocket</option>
                 </select>
-                <input type="text" id="account" placeholder="017XXXXXXXX" class="w-full p-4 bg-gray-50 border-none rounded-2xl font-bold">
-                <input type="number" id="amount" placeholder="Enter amount (Min 500)" class="w-full p-4 bg-gray-50 border-none rounded-2xl font-bold">
-                <button onclick="handleWithdraw()" id="btn" class="w-full py-4 bg-[#003ec7] text-white rounded-2xl font-black shadow-lg">Confirm Withdrawal</button>
+                <input type="text" id="account" placeholder="Enter Account Number" class="w-full p-4 bg-gray-50 border-none rounded-2xl font-bold">
+                <input type="number" id="amount" placeholder="Minimum ৳500" class="w-full p-4 bg-gray-50 border-none rounded-2xl font-bold">
+                <button onclick="handleWithdraw()" id="btn" class="w-full py-5 bg-[#003ec7] text-white rounded-2xl font-black shadow-lg">Confirm Withdrawal</button>
             </div>
         </section>
     </main>
@@ -39,18 +39,24 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAtYq8JTQXdMmrwhc3W96g7KfqThZcTA_4",
+            authDomain: "onlineincome-326f9.firebaseapp.com",
+            databaseURL: "https://onlineincome-326f9-default-rtdb.firebaseio.com",
+            projectId: "onlineincome-326f9",
+            storageBucket: "onlineincome-326f9.firebasestorage.app",
+            messagingSenderId: "79088960253",
+            appId: "1:79088960253:web:4a39dbe9d3207ccca1f494"
+        };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
         let currentBalance = 0;
-        let userName = "";
 
         auth.onAuthStateChanged(user => {
             if (user) {
-                db.ref('users/' + user.uid).on('value', snap => {
-                    const data = snap.val() || {};
-                    currentBalance = data.balance || 0;
-                    userName = data.name || "User";
+                db.ref('users/' + user.uid + '/balance').on('value', snap => {
+                    currentBalance = snap.val() || 0;
                     document.getElementById('wallet-balance').innerText = "৳ " + currentBalance.toFixed(2);
                 });
             } else { window.location.href = "login.html"; }
@@ -61,22 +67,32 @@
             const account = document.getElementById('account').value;
             const method = document.getElementById('method').value;
 
-            if (isNaN(amount) || amount < 500) return Swal.fire('Error', 'Minimum withdrawal is ৳500', 'warning');
+            if (isNaN(amount) || amount < 500) return Swal.fire('Oops!', 'Minimum withdrawal is ৳500', 'warning');
             if (amount > currentBalance) return Swal.fire('Error', 'Insufficient balance!', 'error');
-            if (!account || account.length < 11) return Swal.fire('Error', 'Enter a valid number!', 'info');
+            if (!account || account.length < 11) return Swal.fire('Error', 'Invalid account number!', 'info');
 
             const btn = document.getElementById('btn');
             btn.disabled = true; btn.innerText = "Processing...";
 
             try {
                 const user = auth.currentUser;
-                await db.ref('withdrawals').push({
-                    userId: user.uid, userName, amount, account, method, status: "Pending", timestamp: Date.now()
+                const withdrawRef = db.ref('withdrawals').push();
+                await withdrawRef.set({
+                    userId: user.uid,
+                    amount: amount,
+                    account: account,
+                    method: method,
+                    status: "Pending",
+                    timestamp: Date.now()
                 });
+
                 await db.ref('users/' + user.uid).update({ balance: currentBalance - amount });
                 Swal.fire('Success!', 'Withdrawal request submitted!', 'success');
                 document.getElementById('amount').value = "";
-            } catch (error) { Swal.fire('Error', 'Something went wrong!', 'error'); }
+                document.getElementById('account').value = "";
+            } catch (error) {
+                Swal.fire('Error', 'Something went wrong!', 'error');
+            }
             btn.disabled = false; btn.innerText = "Confirm Withdrawal";
         }
     </script>
