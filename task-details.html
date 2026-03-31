@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Task Details | Prosper</title>
+    <title>Task Submission | Prosper</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
@@ -11,17 +11,16 @@
 <body class="bg-[#fcf9f8] p-6">
     <header class="max-w-xl mx-auto flex items-center gap-4 mb-8">
         <a href="tasks.html" class="text-gray-400"><span class="material-symbols-outlined">arrow_back_ios</span></a>
-        <h1 class="text-xl font-bold text-gray-800">Task Submission</h1>
+        <h1 class="text-xl font-bold text-gray-800">Task Details</h1>
     </header>
 
-    <main id="task-box" class="max-w-xl mx-auto bg-white p-8 rounded-[40px] shadow-xl text-center space-y-6">
+    <main class="max-w-xl mx-auto bg-white p-8 rounded-[40px] shadow-xl text-center space-y-6">
         <h2 id="t-title" class="text-2xl font-black text-gray-800">Loading...</h2>
-        <div class="py-8 bg-blue-50 rounded-[32px] border border-blue-100">
+        <div class="py-8 bg-blue-50 rounded-[32px]">
             <p class="text-5xl font-black text-[#003ec7]" id="timer">00s</p>
-            <p class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mt-2">Wait for timer to end</p>
         </div>
-        <a id="t-link" href="#" target="_blank" onclick="startTaskTimer()" class="block w-full py-4 bg-[#003ec7] text-white rounded-2xl font-black shadow-lg">Visit & Start Timer</a>
-        <button id="claim-btn" disabled onclick="claimReward()" class="w-full py-5 bg-gray-100 text-gray-400 rounded-[32px] font-black text-lg transition-all">Claim Reward</button>
+        <a id="t-link" href="#" target="_blank" onclick="startTaskTimer()" class="block w-full py-4 bg-[#003ec7] text-white rounded-2xl font-bold">Start Task</a>
+        <button id="claim-btn" disabled onclick="claimReward()" class="w-full py-5 bg-gray-100 text-gray-400 rounded-3xl font-black">Claim Reward</button>
     </main>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -43,31 +42,25 @@
         const urlParams = new URLSearchParams(window.location.search);
         const taskId = urlParams.get('id');
         let taskData = null;
-        let timerStarted = false;
 
         db.ref('tasks/' + taskId).once('value', snap => {
             taskData = snap.val();
-            if(!taskData) { window.location.href = "tasks.html"; return; }
+            if(!taskData) return;
             document.getElementById('t-title').innerText = taskData.title;
             document.getElementById('t-link').href = taskData.link;
             document.getElementById('timer').innerText = taskData.time;
         });
 
         function startTaskTimer() {
-            if(timerStarted) return;
-            timerStarted = true;
             let timeLeft = parseInt(taskData.time);
-            const timerEl = document.getElementById('timer');
             const interval = setInterval(() => {
                 timeLeft--;
-                timerEl.innerText = timeLeft + "s";
+                document.getElementById('timer').innerText = timeLeft + "s";
                 if(timeLeft <= 0) {
                     clearInterval(interval);
                     const btn = document.getElementById('claim-btn');
                     btn.disabled = false;
-                    btn.classList.replace('bg-gray-100', 'bg-green-600');
-                    btn.classList.replace('text-gray-400', 'text-white');
-                    btn.innerText = "Claim Now!";
+                    btn.className = "w-full py-5 bg-green-600 text-white rounded-3xl font-black";
                 }
             }, 1000);
         }
@@ -76,19 +69,18 @@
             const user = auth.currentUser;
             const userRef = db.ref('users/' + user.uid);
             const snap = await userRef.once('value');
-            const userData = snap.val() || {};
-            const name = userData.name || "User";
-
+            const data = snap.val() || {};
+            
             await userRef.update({
-                balance: (userData.balance || 0) + parseFloat(taskData.reward),
-                tasksDone: (userData.tasksDone || 0) + 1
+                balance: (data.balance || 0) + parseFloat(taskData.reward),
+                tasksDone: (data.tasksDone || 0) + 1
             });
 
+            // SweetAlert পপ-আপ
             Swal.fire({
-                title: `অভিনন্দন, ${name}!`,
-                text: `৳${taskData.reward} আপনার ব্যালেন্সে যোগ করা হয়েছে।`,
+                title: `অভিনন্দন, ${data.name || "User"}!`,
+                text: `আপনি ৳${taskData.reward} জিতেছেন।`,
                 icon: 'success',
-                confirmButtonText: 'Great!',
                 confirmButtonColor: '#003ec7'
             }).then(() => { window.location.href = "dashboard.html"; });
         }
