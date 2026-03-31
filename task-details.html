@@ -19,24 +19,26 @@
         <h1 class="text-xl font-bold text-[#003ec7]">Task Submission</h1>
     </header>
 
-    <main class="p-6 max-w-xl mx-auto space-y-6">
+    <main id="loading-state" class="p-10 text-center font-bold text-gray-400">Loading Task Details...</main>
+
+    <main id="main-content" class="p-6 max-w-xl mx-auto space-y-6 hidden">
         
         <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-center space-y-4">
-            <div class="w-20 h-20 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mx-auto">
+            <div id="task-icon-box" class="w-20 h-20 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mx-auto">
                 <span class="material-symbols-outlined text-4xl">Ads_Click</span>
             </div>
             <div>
-                <h2 class="text-2xl font-black font-headline" id="task-title">YouTube Video Watch</h2>
-                <p class="text-sm text-gray-500">Watch the full video to earn your reward.</p>
+                <h2 class="text-2xl font-black font-headline" id="task-title">Loading...</h2>
+                <p class="text-sm text-gray-500">Complete this task to earn your reward.</p>
             </div>
             <div class="flex justify-center gap-8 py-4 border-y border-gray-50">
                 <div class="text-center">
                     <p class="text-[10px] uppercase font-bold text-gray-400">Reward</p>
-                    <p class="text-xl font-black text-green-600">৳ 15.00</p>
+                    <p class="text-xl font-black text-green-600" id="display-reward">৳ 0.00</p>
                 </div>
                 <div class="text-center">
                     <p class="text-[10px] uppercase font-bold text-gray-400">Time Limit</p>
-                    <p class="text-xl font-black text-blue-600">60s</p>
+                    <p class="text-xl font-black text-blue-600" id="display-time">0s</p>
                 </div>
             </div>
         </div>
@@ -59,14 +61,13 @@
 
             <div id="timer-box" class="hidden text-center p-4 bg-gray-100 rounded-2xl">
                 <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">Wait for</p>
-                <h4 id="timer-display" class="text-3xl font-black text-blue-600">60s</h4>
+                <h4 id="timer-display" class="text-3xl font-black text-blue-600">0s</h4>
             </div>
 
             <button id="claim-btn" disabled onclick="claimReward()" class="w-full py-4 bg-gray-200 text-gray-400 rounded-2xl font-bold cursor-not-allowed transition-all">
                 Claim Reward
             </button>
         </div>
-
     </main>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -88,13 +89,38 @@
         const auth = firebase.auth();
         const db = firebase.database();
 
-        let timeLeft = 60; // সেকেন্ডে সময়
-        let rewardAmount = 5.00; // কত টাকা ইউজার পাবে
+        // URL থেকে Task ID খুঁজে বের করা
+        const urlParams = new URLSearchParams(window.location.search);
+        const taskId = urlParams.get('id');
+
+        let taskData = null;
+        let timeLeft = 0;
         let timerInterval;
 
+        // টাস্কের ডাটা লোড করা
+        if (taskId) {
+            db.ref('tasks/' + taskId).once('value', snap => {
+                taskData = snap.val();
+                if (taskData) {
+                    document.getElementById('task-title').innerText = taskData.title;
+                    document.getElementById('display-reward').innerText = "৳ " + parseFloat(taskData.reward).toFixed(2);
+                    document.getElementById('display-time').innerText = taskData.time;
+                    timeLeft = parseInt(taskData.time);
+                    document.getElementById('timer-display').innerText = timeLeft + "s";
+                    
+                    document.getElementById('loading-state').classList.add('hidden');
+                    document.getElementById('main-content').classList.remove('hidden');
+                } else {
+                    alert("Task not found!");
+                    window.location.href = "tasks.html";
+                }
+            });
+        }
+
         function startTimer() {
-            // নতুন ট্যাবে টাস্ক লিংক ওপেন করা (এখানে আপনার লিংক দিন)
-            window.open("https://youtu.be/Xd4KABn4Y-k?si=63Mivd808635CCyx", "_blank");
+            if (!taskData) return;
+            
+            window.open(taskData.link, "_blank");
 
             document.getElementById('visit-btn').classList.add('hidden');
             document.getElementById('timer-box').classList.remove('hidden');
@@ -120,7 +146,7 @@
 
         async function claimReward() {
             const user = auth.currentUser;
-            if (!user) return alert("Please login first!");
+            if (!user || !taskData) return;
 
             const btn = document.getElementById('claim-btn');
             btn.disabled = true;
@@ -129,29 +155,25 @@
             const userRef = db.ref('users/' + user.uid);
             
             try {
-                // ডাটাবেস থেকে বর্তমান ব্যালেন্স আনা এবং আপডেট করা
                 const snapshot = await userRef.once('value');
                 const userData = snapshot.val() || {};
                 const currentBalance = userData.balance || 0;
                 const completedTasks = userData.completedTasks || 0;
 
                 await userRef.update({
-                    balance: currentBalance + rewardAmount,
+                    balance: currentBalance + parseFloat(taskData.reward),
                     completedTasks: completedTasks + 1
                 });
 
-                alert("Successfully claimed ৳" + rewardAmount);
-                window.location.href = "dashboard.html"; // ড্যাশবোর্ডে ফেরত পাঠানো
+                alert("Successfully claimed ৳" + taskData.reward);
+                window.location.href = "dashboard.html";
 
             } catch (error) {
-                console.error(error);
-                alert("Something went wrong!");
+                alert("Error claiming reward.");
                 btn.disabled = false;
-                btn.innerText = "Claim Reward";
             }
         }
 
-        // সিকিউরিটি: ইউজার লগইন না থাকলে ফেরত পাঠানো
         auth.onAuthStateChanged(user => {
             if (!user) window.location.href = "login.html";
         });
