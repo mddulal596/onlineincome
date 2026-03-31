@@ -6,36 +6,89 @@
     <title>Wallet - Financial Atelier</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #fcf9f8; }
+        .font-headline { font-family: 'Manrope', sans-serif; }
+    </style>
 </head>
-<body class="bg-[#fcf9f8] pb-24">
+<body class="pb-32">
+
+    <header class="p-6 bg-white border-b sticky top-0 z-50 flex items-center gap-4">
+        <a href="dashboard.html" class="text-gray-400"><span class="material-symbols-outlined">arrow_back_ios</span></a>
+        <h1 class="text-xl font-bold text-[#003ec7]">My Wallet</h1>
+    </header>
+
     <main class="p-6 max-w-xl mx-auto space-y-8">
-        <section class="bg-gradient-to-br from-blue-700 to-blue-500 rounded-2xl p-8 text-white shadow-xl">
-            <span class="text-xs uppercase opacity-70 font-bold tracking-widest">Total Balance</span>
-            <h2 class="text-5xl font-black mt-2" id="wallet-balance">৳ 0.00</h2>
+        <section class="bg-gradient-to-br from-[#003ec7] to-[#005eff] rounded-[32px] p-8 text-white shadow-xl relative overflow-hidden">
+            <div class="relative z-10">
+                <span class="text-xs uppercase opacity-70 font-bold tracking-widest">Total Balance</span>
+                <h2 class="text-5xl font-black mt-2 font-headline" id="wallet-balance">৳ 0.00</h2>
+            </div>
+            <div class="absolute -right-5 -bottom-5 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
         </section>
 
-        <section class="bg-white p-6 rounded-2xl shadow-sm space-y-4">
-            <h3 class="font-bold text-xl">Withdraw Funds</h3>
-            <select id="method" class="w-full p-3 bg-gray-50 border-none rounded-lg font-bold">
-                <option value="bKash">bKash</option>
-                <option value="Nagad">Nagad</option>
-                <option value="Rocket">Rocket</option>
-            </select>
-            <input type="number" id="amount" placeholder="Amount (Minimum ৳50)" class="w-full p-3 bg-gray-50 border-none rounded-lg font-bold">
-            <input type="text" id="account" placeholder="Account Number" class="w-full p-3 bg-gray-50 border-none rounded-lg font-bold">
-            <button onclick="handleWithdraw()" id="btn" class="w-full py-4 bg-blue-600 text-white rounded-xl font-bold shadow-lg hover:bg-blue-700 active:scale-95 transition-all">Confirm Withdrawal</button>
+        <section class="bg-white p-8 rounded-[32px] shadow-sm space-y-6 border border-gray-100">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="material-symbols-outlined text-blue-600">account_balance_wallet</span>
+                <h3 class="font-bold text-xl text-gray-800">Withdraw Funds</h3>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Select Method</label>
+                    <select id="method" class="w-full p-4 bg-gray-50 border-none rounded-2xl font-bold focus:ring-2 focus:ring-blue-500 transition-all">
+                        <option value="bKash">bKash</option>
+                        <option value="Nagad">Nagad</option>
+                        <option value="Rocket">Rocket</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Account Number</label>
+                    <input type="text" id="account" placeholder="017XXXXXXXX" class="w-full p-4 bg-gray-50 border-none rounded-2xl font-bold focus:ring-2 focus:ring-blue-500 transition-all">
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Amount (Min ৳500)</label>
+                    <input type="number" id="amount" placeholder="Enter amount" class="w-full p-4 bg-gray-50 border-none rounded-2xl font-bold focus:ring-2 focus:ring-blue-500 transition-all">
+                </div>
+
+                <button onclick="handleWithdraw()" id="btn" class="w-full py-4 bg-[#003ec7] text-white rounded-2xl font-black shadow-lg hover:bg-blue-700 active:scale-95 transition-all">
+                    Confirm Withdrawal
+                </button>
+            </div>
+            
+            <p class="text-[11px] text-center text-gray-400 font-medium px-4">
+                উইথড্র রিকোয়েস্ট দেওয়ার ২৪ ঘণ্টার মধ্যে আপনার পেমেন্ট সম্পন্ন করা হবে।
+            </p>
         </section>
     </main>
 
-    <nav class="fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-md border-t flex justify-around py-4">
-        <a href="index.html" class="text-gray-400 flex flex-col items-center"><span class="material-symbols-outlined">dashboard</span><span class="text-[10px] uppercase font-bold">Studio</span></a>
-        <a href="wallet.html" class="text-blue-600 flex flex-col items-center"><span class="material-symbols-outlined">account_balance_wallet</span><span class="text-[10px] uppercase font-bold">Wallet</span></a>
-        <a href="profile.html" class="text-gray-400 flex flex-col items-center"><span class="material-symbols-outlined">person</span><span class="text-[10px] uppercase font-bold">Profile</span></a>
+    <nav class="fixed bottom-6 left-6 right-6 bg-white/90 backdrop-blur-xl border border-white/20 h-20 rounded-[32px] shadow-2xl flex items-center justify-around px-4 z-50">
+        <a href="dashboard.html" class="flex flex-col items-center gap-1 text-gray-400">
+            <span class="material-symbols-outlined">home</span>
+            <span class="text-[10px] font-bold uppercase">Home</span>
+        </a>
+        <a href="tasks.html" class="flex flex-col items-center gap-1 text-gray-400">
+            <span class="material-symbols-outlined">explore</span>
+            <span class="text-[10px] font-bold uppercase">Tasks</span>
+        </a>
+        <a href="wallet.html" class="flex flex-col items-center gap-1 text-[#003ec7]">
+            <span class="material-symbols-outlined font-variation-fill">account_balance_wallet</span>
+            <span class="text-[10px] font-bold uppercase">Wallet</span>
+        </a>
+        <a href="profile.html" class="flex flex-col items-center gap-1 text-gray-400">
+            <span class="material-symbols-outlined">person</span>
+            <span class="text-[10px] font-bold uppercase">Profile</span>
+        </a>
     </nav>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyAtYq8JTQXdMmrwhc3W96g7KfqThZcTA_4",
@@ -44,40 +97,98 @@
             projectId: "onlineincome-326f9",
             storageBucket: "onlineincome-326f9.firebasestorage.app",
             messagingSenderId: "79088960253",
-            appId: "1:79088960253:web:4a39dbe9d3207ccca1f494",
-            measurementId: "G-2DQF1FCGRW"
+            appId: "1:79088960253:web:4a39dbe9d3207ccca1f494"
         };
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
         const auth = firebase.auth();
+        const db = firebase.database();
+
+        let currentBalance = 0;
+        let userName = "User";
 
         auth.onAuthStateChanged(user => {
             if (user) {
-                db.ref('users/' + user.uid + '/balance').on('value', snap => {
-                    document.getElementById('wallet-balance').innerText = "৳ " + (snap.val() || 0).toFixed(2);
-                    window.currentBalance = snap.val() || 0;
+                // ব্যালেন্স এবং নাম লোড করা
+                db.ref('users/' + user.uid).on('value', snap => {
+                    const data = snap.val() || {};
+                    currentBalance = data.balance || 0;
+                    userName = data.name || "User";
+                    document.getElementById('wallet-balance').innerText = "৳ " + currentBalance.toFixed(2);
                 });
-            } else { window.location.href = "login.html"; }
+            } else {
+                window.location.href = "login.html";
+            }
         });
 
         async function handleWithdraw() {
             const amount = parseFloat(document.getElementById('amount').value);
             const account = document.getElementById('account').value;
             const method = document.getElementById('method').value;
+            const minAmount = 500; // আপনার চাহিদা অনুযায়ী ৫০০ টাকা
 
-            if (amount < 50 || amount > window.currentBalance) return alert("Insufficient Balance or Invalid Amount!");
-            if (!account) return alert("Please enter account number!");
+            // ভ্যালিডেশন
+            if (isNaN(amount) || amount < minAmount) {
+                return Swal.fire({
+                    title: 'দুঃখিত!',
+                    text: `সর্বনিম্ন উইথড্র পরিমাণ ৳${minAmount}`,
+                    icon: 'warning',
+                    confirmButtonColor: '#003ec7'
+                });
+            }
+
+            if (amount > currentBalance) {
+                return Swal.fire({
+                    title: 'পর্যাপ্ত ব্যালেন্স নেই',
+                    text: 'আপনার অ্যাকাউন্টে যথেষ্ট টাকা নেই।',
+                    icon: 'error',
+                    confirmButtonColor: '#003ec7'
+                });
+            }
+
+            if (!account || account.length < 11) {
+                return Swal.fire('ভুল নম্বর', 'সঠিক অ্যাকাউন্ট নম্বর প্রদান করুন।', 'info');
+            }
 
             const btn = document.getElementById('btn');
-            btn.disabled = true; btn.innerText = "Processing...";
+            btn.disabled = true;
+            btn.innerText = "Processing...";
 
-            const user = auth.currentUser;
-            const withdrawRef = db.ref('withdrawals').push();
-            await withdrawRef.set({ userId: user.uid, amount, account, method, status: "Pending", timestamp: Date.now() });
-            await db.ref('users/' + user.uid).update({ balance: window.currentBalance - amount });
+            try {
+                const user = auth.currentUser;
+                const withdrawRef = db.ref('withdrawals').push();
+                
+                // ১. উইথড্রয়াল ডাটা সেভ করা
+                await withdrawRef.set({
+                    userId: user.uid,
+                    userName: userName,
+                    amount: amount,
+                    account: account,
+                    method: method,
+                    status: "Pending",
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                });
 
-            alert("Withdrawal Request Submitted!");
-            btn.disabled = false; btn.innerText = "Confirm Withdrawal";
+                // ২. ইউজারের মেইন ব্যালেন্স থেকে টাকা কেটে নেওয়া
+                await db.ref('users/' + user.uid).update({
+                    balance: currentBalance - amount
+                });
+
+                Swal.fire({
+                    title: `ধন্যবাদ ${userName}!`,
+                    text: 'আপনার উইথড্র রিকোয়েস্টটি সফলভাবে জমা হয়েছে।',
+                    icon: 'success',
+                    confirmButtonColor: '#003ec7'
+                }).then(() => {
+                    document.getElementById('amount').value = "";
+                    document.getElementById('account').value = "";
+                });
+
+            } catch (error) {
+                Swal.fire('Error', 'কিছু সমস্যা হয়েছে, আবার চেষ্টা করুন।', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Confirm Withdrawal";
+            }
         }
     </script>
 </body>
