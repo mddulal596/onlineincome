@@ -5,7 +5,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Dashboard | Prosper</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@800&family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
     <style> body { font-family: 'Inter', sans-serif; background-color: #fcf9f8; } </style>
 </head>
@@ -13,7 +13,7 @@
 
     <header class="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
         <div class="flex justify-between items-center px-6 py-4 max-w-5xl mx-auto">
-            <h1 class="font-bold text-[#003ec7] text-xl">Prosper</h1>
+            <h1 class="font-black text-[#003ec7] tracking-tighter text-xl">Prosper</h1>
             <div class="w-8 h-8 rounded-full bg-blue-100 border border-blue-200 overflow-hidden">
                 <img id="user-avatar" src="" alt="U">
             </div>
@@ -23,25 +23,32 @@
     <main class="pt-24 px-6 max-w-5xl mx-auto space-y-8">
         <section>
             <p class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-1">Welcome Back,</p>
-            <h2 id="welcome-name" class="text-3xl font-black text-gray-800">Loading...</h2>
+            <h2 id="user-name" class="text-3xl font-black text-gray-800 tracking-tight">Loading...</h2>
         </section>
 
         <section class="bg-gradient-to-br from-[#003ec7] to-[#005eff] rounded-[40px] p-8 text-white shadow-2xl">
             <p class="text-xs font-bold opacity-70 uppercase mb-1">Available Balance</p>
             <h3 id="user-balance" class="text-5xl font-black tracking-tighter">৳ 0.00</h3>
         </section>
-        
+
         <section class="grid grid-cols-2 gap-4">
-            <a href="tasks.html" class="bg-white p-6 rounded-3xl border border-gray-50 shadow-sm flex flex-col items-center gap-2">
-                <span class="material-symbols-outlined text-[#003ec7]">assignment</span>
+            <a href="tasks.html" class="bg-white p-6 rounded-3xl border border-gray-50 shadow-sm flex flex-col items-center gap-3">
+                <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-[#003ec7]"><span class="material-symbols-outlined">assignment</span></div>
                 <span class="font-bold text-sm">Work Station</span>
             </a>
-            <a href="wallet.html" class="bg-white p-6 rounded-3xl border border-gray-50 shadow-sm flex flex-col items-center gap-2">
-                <span class="material-symbols-outlined text-green-600">account_balance_wallet</span>
+            <a href="wallet.html" class="bg-white p-6 rounded-3xl border border-gray-50 shadow-sm flex flex-col items-center gap-3">
+                <div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-600"><span class="material-symbols-outlined">account_balance_wallet</span></div>
                 <span class="font-bold text-sm">Withdraw</span>
             </a>
         </section>
     </main>
+
+    <nav class="fixed bottom-6 left-6 right-6 bg-white/90 backdrop-blur-xl border border-white/20 h-20 rounded-[32px] shadow-2xl flex items-center justify-around z-50">
+        <a href="dashboard.html" class="flex flex-col items-center text-[#003ec7]"><span class="material-symbols-outlined">home</span><span class="text-[10px] font-bold">Home</span></a>
+        <a href="tasks.html" class="flex flex-col items-center text-gray-400"><span class="material-symbols-outlined">explore</span><span class="text-[10px] font-bold">Tasks</span></a>
+        <a href="wallet.html" class="flex flex-col items-center text-gray-400"><span class="material-symbols-outlined">account_balance_wallet</span><span class="text-[10px] font-bold">Wallet</span></a>
+        <a href="profile.html" class="flex flex-col items-center text-gray-400"><span class="material-symbols-outlined">person</span><span class="text-[10px] font-bold">Profile</span></a>
+    </nav>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
@@ -62,14 +69,12 @@
 
         auth.onAuthStateChanged(user => {
             if (user) {
-                // সরাসরি ইউজারের আইডি দিয়ে ডাটাবেস থেকে ডাটা আনা হচ্ছে
                 db.ref('users/' + user.uid).on('value', snap => {
                     const data = snap.val() || {};
-                    // এখানে নাম সেট করা হচ্ছে
-                    const displayName = data.name || data.username || "User";
-                    document.getElementById('welcome-name').innerText = displayName;
+                    const name = data.name || "New Member";
+                    document.getElementById('user-name').innerText = name;
                     document.getElementById('user-balance').innerText = "৳ " + (data.balance || 0).toFixed(2);
-                    document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=003ec7&color=fff`;
+                    document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=003ec7&color=fff&bold=true`;
                 });
             } else { window.location.href = "login.html"; }
         });
