@@ -82,9 +82,7 @@
                 confirmButtonColor: '#d33',
                 confirmButtonText: 'Yes, Logout!'
             }).then((result) => {
-                if (result.isConfirmed) {
-                    auth.signOut().then(() => { window.location.href = "login.html"; });
-                }
+                if (result.isConfirmed) { auth.signOut().then(() => { window.location.href = "login.html"; }); }
             });
         }
     </script>
