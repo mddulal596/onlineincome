@@ -5,175 +5,71 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Task Details | Prosper</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #fcf9f8; }
-        .font-headline { font-family: 'Manrope', sans-serif; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-    </style>
 </head>
-<body class="pb-10">
-
-    <header class="p-6 bg-white border-b flex items-center gap-4 sticky top-0 z-50">
-        <a href="tasks.html" class="text-gray-400"><span class="material-symbols-outlined">arrow_back_ios</span></a>
-        <h1 class="text-xl font-bold text-[#003ec7]">Task Submission</h1>
-    </header>
-
-    <main id="main-content" class="p-6 max-w-xl mx-auto space-y-6">
-        <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-center space-y-4">
-            <div id="task-icon-box" class="w-20 h-20 bg-blue-50 rounded-3xl flex items-center justify-center text-[#003ec7] mx-auto mb-4">
-                <span class="material-symbols-outlined text-4xl" id="task-icon">work</span>
-            </div>
-            <h2 id="task-title" class="text-2xl font-black text-gray-800">Loading Task...</h2>
-            <div class="flex justify-center gap-4">
-                <span class="bg-green-50 text-green-600 px-4 py-1 rounded-full font-bold text-sm" id="task-reward">৳ 0.00</span>
-                <span class="bg-gray-50 text-gray-500 px-4 py-1 rounded-full font-bold text-sm" id="task-time">0s</span>
-            </div>
+<body class="bg-[#fcf9f8] p-6">
+    <main id="task-box" class="max-w-xl mx-auto bg-white p-8 rounded-[40px] shadow-xl text-center space-y-6 mt-10">
+        <h2 id="t-title" class="text-2xl font-black">Loading...</h2>
+        <div class="py-6 bg-blue-50 rounded-3xl">
+            <p class="text-4xl font-black text-blue-600" id="timer">00s</p>
+            <p class="text-xs font-bold text-blue-400 uppercase tracking-widest mt-1">Wait for timer</p>
         </div>
-
-        <div class="bg-blue-600 p-8 rounded-3xl text-white space-y-4 shadow-xl">
-            <h3 class="font-bold flex items-center gap-2 italic">
-                <span class="material-symbols-outlined">info</span> Instructions:
-            </h3>
-            <p class="text-sm opacity-90 leading-relaxed">
-                ১. নিচের "Start Task" বাটনে ক্লিক করুন।<br>
-                ২. আপনাকে একটি লিঙ্কে নিয়ে যাওয়া হবে, সেখানে কাজ সম্পন্ন করুন।<br>
-                ৩. কাজ চলাকালীন এই পেজটি বন্ধ করবেন না। টাইমার শেষ হলে Reward ক্লেইম করুন।
-            </p>
-            <button id="start-btn" onclick="startTask()" class="w-full py-4 bg-white text-blue-600 rounded-2xl font-black shadow-lg active:scale-95 transition-all">
-                Start Task Now
-            </button>
-        </div>
-
-        <div id="timer-box" class="hidden bg-white p-8 rounded-3xl border border-dashed border-blue-200 text-center space-y-4">
-            <p class="text-gray-400 font-bold uppercase text-xs tracking-widest">Wait for Timer</p>
-            <h3 id="countdown" class="text-5xl font-black text-[#003ec7]">00s</h3>
-            <button id="claim-btn" onclick="claimReward()" disabled class="w-full py-4 bg-gray-200 text-gray-400 rounded-2xl font-black cursor-not-allowed transition-all">
-                Finish Task First
-            </button>
-        </div>
+        <a id="t-link" href="#" target="_blank" class="block w-full py-4 bg-gray-100 rounded-2xl font-bold">Visit Link First</a>
+        <button id="claim-btn" disabled onclick="claimReward()" class="w-full py-5 bg-gray-200 text-gray-400 rounded-3xl font-black text-lg transition-all">Claim Reward</button>
     </main>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAtYq8JTQXdMmrwhc3W96g7KfqThZcTA_4",
-            authDomain: "onlineincome-326f9.firebaseapp.com",
-            databaseURL: "https://onlineincome-326f9-default-rtdb.firebaseio.com",
-            projectId: "onlineincome-326f9",
-            storageBucket: "onlineincome-326f9.firebasestorage.app",
-            messagingSenderId: "79088960253",
-            appId: "1:79088960253:web:4a39dbe9d3207ccca1f494"
-        };
-
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
-
-        let taskData = null;
-        let timerInterval;
-
-        // টাস্ক আইডি গেট করা
         const urlParams = new URLSearchParams(window.location.search);
         const taskId = urlParams.get('id');
+        let taskData = null;
 
-        if (!taskId) {
-            window.location.href = "tasks.html";
-        }
-
-        // টাস্ক ডাটা লোড করা
         db.ref('tasks/' + taskId).once('value', snap => {
             taskData = snap.val();
-            if (taskData) {
-                document.getElementById('task-title').innerText = taskData.title;
-                document.getElementById('task-reward').innerText = "৳ " + taskData.reward;
-                document.getElementById('task-time').innerText = taskData.time;
-                
-                // আইকন সেট করা
-                const iconMap = { 'youtube': 'play_circle', 'facebook': 'share', 'website': 'language' };
-                document.getElementById('task-icon').innerText = iconMap[taskData.type] || 'work';
-            }
+            document.getElementById('t-title').innerText = taskData.title;
+            document.getElementById('t-link').href = taskData.link;
+            startTimer(parseInt(taskData.time));
         });
 
-        function startTask() {
-            if (!taskData) return;
-            
-            // নতুন ট্যাব ওপেন করা
-            window.open(taskData.link, '_blank');
-            
-            // টাইমার সেকশন দেখানো
-            document.getElementById('start-btn').parentElement.classList.add('hidden');
-            document.getElementById('timer-box').classList.remove('hidden');
-
-            let timeLeft = parseInt(taskData.time);
-            timerInterval = setInterval(() => {
+        function startTimer(seconds) {
+            let timeLeft = seconds;
+            const timerEl = document.getElementById('timer');
+            const interval = setInterval(() => {
                 timeLeft--;
-                document.getElementById('countdown').innerText = timeLeft + "s";
-
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    activateClaimButton();
+                timerEl.innerText = timeLeft + "s";
+                if(timeLeft <= 0) {
+                    clearInterval(interval);
+                    const btn = document.getElementById('claim-btn');
+                    btn.disabled = false;
+                    btn.classList.replace('bg-gray-200', 'bg-green-600');
+                    btn.classList.replace('text-gray-400', 'text-white');
                 }
             }, 1000);
         }
 
-        function activateClaimButton() {
-            const btn = document.getElementById('claim-btn');
-            btn.disabled = false;
-            btn.innerText = "Claim Reward Now!";
-            btn.classList.remove('bg-gray-200', 'text-gray-400');
-            btn.classList.add('bg-green-600', 'text-white', 'shadow-lg', 'active:scale-95');
-        }
-
         async function claimReward() {
             const user = auth.currentUser;
-            if (!user || !taskData) return;
-
-            const btn = document.getElementById('claim-btn');
-            btn.disabled = true;
-            btn.innerText = "Processing...";
-
             const userRef = db.ref('users/' + user.uid);
-            
-            try {
-                // ১. ইউজারের বর্তমান ডাটা আনা
-                const snapshot = await userRef.once('value');
-                const userData = snapshot.val() || {};
-                
-                const newBalance = (userData.balance || 0) + parseFloat(taskData.reward);
-                const newTasksDone = (userData.tasksDone || 0) + 1;
+            const snap = await userRef.once('value');
+            const userData = snap.val() || {};
+            const name = userData.name || "User";
 
-                // ২. ডাটাবেস আপডেট করা
-                await userRef.update({
-                    balance: newBalance,
-                    tasksDone: newTasksDone
-                });
+            await userRef.update({
+                balance: (userData.balance || 0) + parseFloat(taskData.reward),
+                tasksDone: (userData.tasksDone || 0) + 1
+            });
 
-                // ৩. অভিনন্দন মেসেজ (SweetAlert2)
-                Swal.fire({
-                    title: `অভিনন্দন, ${userData.name || 'ইউজার'}!`,
-                    text: `৳${taskData.reward} আপনার ব্যালেন্সে যোগ করা হয়েছে। মোট কাজ সম্পন্ন: ${newTasksDone}`,
-                    icon: 'success',
-                    confirmButtonText: 'ঠিক আছে',
-                    confirmButtonColor: '#003ec7',
-                    allowOutsideClick: false
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = "dashboard.html";
-                    }
-                });
-
-            } catch (error) {
-                console.error(error);
-                Swal.fire('Error', 'পুরস্কার যোগ করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।', 'error');
-                btn.disabled = false;
-                btn.innerText = "Claim Reward Now!";
-            }
+            Swal.fire({
+                title: `অভিনন্দন, ${name}!`,
+                text: `৳${taskData.reward} আপনার ব্যালেন্সে যোগ হয়েছে।`,
+                icon: 'success',
+                confirmButtonText: 'Great!'
+            }).then(() => { window.location.href = "dashboard.html"; });
         }
     </script>
 </body>
