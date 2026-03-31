@@ -7,9 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #fcf9f8; }
         .font-headline { font-family: 'Manrope', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="pb-32 text-[#1c1b1b]">
@@ -17,49 +19,88 @@
     <header class="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
         <div class="flex justify-between items-center px-6 py-4 max-w-5xl mx-auto">
             <h1 class="font-headline font-black text-[#003ec7] tracking-tighter text-xl">Prosper</h1>
-            <div class="w-8 h-8 rounded-full bg-blue-100 border border-blue-200 overflow-hidden">
-                <img id="nav-avatar" src="https://ui-avatars.com/api/?name=User" class="w-full h-full object-cover">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-gray-400">notifications</span>
+                <div class="w-8 h-8 rounded-full bg-blue-100 border border-blue-200 overflow-hidden">
+                    <img id="user-avatar" src="https://ui-avatars.com/api/?name=User" alt="User">
+                </div>
             </div>
         </div>
     </header>
 
     <main class="pt-24 px-6 max-w-5xl mx-auto space-y-8">
-        <section class="bg-gradient-to-br from-[#003ec7] to-[#0052ff] rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+        
+        <section>
+            <p class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-1">Welcome Back,</p>
+            <h2 id="user-name" class="text-3xl font-black font-headline text-gray-800">Loading...</h2>
+        </section>
+
+        <section class="bg-gradient-to-br from-[#003ec7] to-[#005eff] rounded-[40px] p-8 text-white shadow-2xl shadow-blue-200 relative overflow-hidden">
             <div class="relative z-10">
-                <p class="text-xs uppercase tracking-[0.2em] opacity-80 font-bold mb-1">Welcome Back</p>
-                <h2 id="user-name" class="font-headline text-3xl font-extrabold mb-6">Loading...</h2>
-                <div class="flex items-end justify-between">
+                <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-[10px] uppercase font-bold opacity-70 tracking-widest">Available Balance</p>
-                        <h3 id="user-balance" class="text-4xl font-black tracking-tight mt-1">৳ 0.00</h3>
+                        <p class="text-xs font-bold opacity-70 uppercase tracking-tighter mb-1">Available Balance</p>
+                        <h3 id="user-balance" class="text-5xl font-black font-headline">৳ 0.00</h3>
                     </div>
-                    <a href="wallet.html" class="bg-white/20 hover:bg-white/30 backdrop-blur-md px-4 py-2 rounded-xl text-sm font-bold border border-white/10 transition-all">Wallet</a>
+                    <a href="wallet.html" class="bg-white/20 backdrop-blur-md p-3 rounded-2xl hover:bg-white/30 transition-all">
+                        <span class="material-symbols-outlined">add</span>
+                    </a>
+                </div>
+                
+                <div class="mt-10 flex gap-6">
+                    <div class="bg-white/10 rounded-2xl px-4 py-3 backdrop-blur-sm">
+                        <p class="text-[10px] opacity-60 font-bold uppercase">Tasks Completed</p>
+                        <p id="tasks-done-count" class="text-lg font-black italic">0</p>
+                    </div>
+                    <div class="bg-white/10 rounded-2xl px-4 py-3 backdrop-blur-sm">
+                        <p class="text-[10px] opacity-60 font-bold uppercase">Membership</p>
+                        <p class="text-lg font-black italic">Artisan</p>
+                    </div>
                 </div>
             </div>
+            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
         </section>
 
         <section class="grid grid-cols-2 gap-4">
-            <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm text-center">
-                <p class="text-[10px] uppercase font-bold text-gray-400">Referrals</p>
-                <p id="ref-count" class="text-xl font-bold text-blue-600">0</p>
-            </div>
-            <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm text-center">
-                <p class="text-[10px] uppercase font-bold text-gray-400">Tasks Done</p>
-                <p id="tasks-done" class="text-xl font-bold text-green-600">0</p>
-            </div>
+            <a href="tasks.html" class="bg-white p-6 rounded-3xl border border-gray-50 shadow-sm flex flex-col items-center text-center gap-3 hover:border-blue-100 transition-all group">
+                <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-[#003ec7] group-hover:scale-110 transition-transform">
+                    <span class="material-symbols-outlined">assignment</span>
+                </div>
+                <span class="font-bold text-sm">Work Station</span>
+            </a>
+            <a href="wallet.html" class="bg-white p-6 rounded-3xl border border-gray-50 shadow-sm flex flex-col items-center text-center gap-3 hover:border-blue-100 transition-all group">
+                <div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 group-hover:scale-110 transition-transform">
+                    <span class="material-symbols-outlined">account_balance_wallet</span>
+                </div>
+                <span class="font-bold text-sm">Withdraw</span>
+            </a>
         </section>
+
     </main>
 
-    <nav class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t flex justify-around py-4 z-50">
-        <a href="dashboard.html" class="flex flex-col items-center text-blue-600"><span class="material-symbols-outlined">dashboard</span><span class="text-[10px] font-bold">Studio</span></a>
-        <a href="tasks.html" class="flex flex-col items-center text-gray-400"><span class="material-symbols-outlined">assignment</span><span class="text-[10px] font-bold">Tasks</span></a>
-        <a href="wallet.html" class="flex flex-col items-center text-gray-400"><span class="material-symbols-outlined">account_balance_wallet</span><span class="text-[10px] font-bold">Wallet</span></a>
-        <a href="profile.html" class="flex flex-col items-center text-gray-400"><span class="material-symbols-outlined">person</span><span class="text-[10px] font-bold">Profile</span></a>
+    <nav class="fixed bottom-6 left-6 right-6 bg-white/90 backdrop-blur-xl border border-white/20 h-20 rounded-[32px] shadow-2xl flex items-center justify-around px-4 z-50">
+        <a href="dashboard.html" class="flex flex-col items-center gap-1 text-[#003ec7]">
+            <span class="material-symbols-outlined font-variation-fill text-2xl">home</span>
+            <span class="text-[10px] font-bold uppercase">Home</span>
+        </a>
+        <a href="tasks.html" class="flex flex-col items-center gap-1 text-gray-400">
+            <span class="material-symbols-outlined text-2xl">explore</span>
+            <span class="text-[10px] font-bold uppercase">Tasks</span>
+        </a>
+        <a href="wallet.html" class="flex flex-col items-center gap-1 text-gray-400">
+            <span class="material-symbols-outlined text-2xl">account_balance_wallet</span>
+            <span class="text-[10px] font-bold uppercase">Wallet</span>
+        </a>
+        <a href="profile.html" class="flex flex-col items-center gap-1 text-gray-400">
+            <span class="material-symbols-outlined text-2xl">person</span>
+            <span class="text-[10px] font-bold uppercase">Profile</span>
+        </a>
     </nav>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyAtYq8JTQXdMmrwhc3W96g7KfqThZcTA_4",
@@ -76,14 +117,32 @@
 
         auth.onAuthStateChanged(user => {
             if (user) {
-                db.ref('users/' + user.uid).on('value', snap => {
+                const userRef = db.ref('users/' + user.uid);
+                
+                // রিয়েলটাইম ডাটা লিসেনিং
+                userRef.on('value', snap => {
                     const data = snap.val() || {};
-                    document.getElementById('user-name').innerText = data.name || "User";
-                    document.getElementById('user-balance').innerText = "৳ " + (data.balance || 0).toFixed(2);
-                    document.getElementById('ref-count').innerText = data.referrals || 0;
-                    document.getElementById('tasks-done').innerText = data.completedTasks || 0;
+                    
+                    // নাম আপডেট
+                    const fullName = data.name || "Valued User";
+                    document.getElementById('user-name').innerText = fullName;
+                    
+                    // ব্যালেন্স আপডেট
+                    const balance = data.balance || 0;
+                    document.getElementById('user-balance').innerText = "৳ " + balance.toFixed(2);
+                    
+                    // টাস্ক কাউন্ট আপডেট
+                    const tasksDone = data.tasksDone || 0;
+                    document.getElementById('tasks-done-count').innerText = tasksDone;
+
+                    // প্রোফাইল পিকচার (UI Avatars ব্যবহার করে)
+                    document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=003ec7&color=fff`;
                 });
-            } else { window.location.href = "login.html"; }
+
+            } else {
+                // লগইন না থাকলে লগইন পেজে পাঠিয়ে দেবে
+                window.location.href = "login.html";
+            }
         });
     </script>
 </body>
