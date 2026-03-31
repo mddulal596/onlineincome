@@ -76,23 +76,14 @@
 
             try {
                 const user = auth.currentUser;
-                const withdrawRef = db.ref('withdrawals').push();
-                await withdrawRef.set({
-                    userId: user.uid,
-                    amount: amount,
-                    account: account,
-                    method: method,
-                    status: "Pending",
-                    timestamp: Date.now()
+                await db.ref('withdrawals').push({
+                    userId: user.uid, amount, account, method, status: "Pending", timestamp: Date.now()
                 });
-
                 await db.ref('users/' + user.uid).update({ balance: currentBalance - amount });
                 Swal.fire('Success!', 'Withdrawal request submitted!', 'success');
                 document.getElementById('amount').value = "";
                 document.getElementById('account').value = "";
-            } catch (error) {
-                Swal.fire('Error', 'Something went wrong!', 'error');
-            }
+            } catch (error) { Swal.fire('Error', 'Something went wrong!', 'error'); }
             btn.disabled = false; btn.innerText = "Confirm Withdrawal";
         }
     </script>
