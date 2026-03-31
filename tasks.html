@@ -3,36 +3,56 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Tasks | Prosper</title>
+    <title>Work Station | Prosper</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #fcf9f8; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
 </head>
-<body class="bg-[#fcf9f8] pb-32">
+<body class="pb-32">
     
-    <header class="p-6 bg-white border-b sticky top-0 z-50 flex justify-between items-center">
+    <header class="p-6 bg-white border-b sticky top-0 z-50 flex justify-between items-center shadow-sm">
         <h1 class="text-xl font-bold text-[#003ec7]">Work Station</h1>
-        <div id="balance-display" class="bg-blue-50 text-[#003ec7] px-4 py-1 rounded-full font-bold text-sm border border-blue-100">
+        <div id="balance-display" class="bg-blue-50 text-[#003ec7] px-4 py-2 rounded-2xl font-black text-sm border border-blue-100 shadow-sm">
             ৳ 0.00
         </div>
     </header>
 
     <main class="p-6 max-w-5xl mx-auto">
         <div class="flex gap-3 overflow-x-auto no-scrollbar mb-8 pb-2">
-            <button class="bg-[#003ec7] text-white px-6 py-2 rounded-full text-xs font-bold whitespace-nowrap">All Tasks</button>
-            <button class="bg-white text-gray-500 px-6 py-2 rounded-full text-xs font-bold border border-gray-100 whitespace-nowrap">High Paying</button>
+            <button class="bg-[#003ec7] text-white px-6 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap shadow-lg shadow-blue-100">All Tasks</button>
+            <button class="bg-white text-gray-500 px-6 py-2.5 rounded-2xl text-xs font-bold border border-gray-100 whitespace-nowrap">High Paying</button>
+            <button class="bg-white text-gray-500 px-6 py-2.5 rounded-2xl text-xs font-bold border border-gray-100 whitespace-nowrap">Social Media</button>
         </div>
 
-        <div id="task-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <p class="text-center col-span-full text-gray-400 py-10">Loading tasks...</p>
+        <div id="task-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="col-span-full flex flex-col items-center py-20 opacity-20">
+                <span class="material-symbols-outlined text-6xl animate-spin">refresh</span>
+                <p class="font-bold mt-2">Loading tasks...</p>
+            </div>
         </div>
     </main>
 
-    <nav class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t flex justify-around py-4 z-50">
-        <a href="dashboard.html" class="flex flex-col items-center text-gray-400"><span class="material-symbols-outlined">dashboard</span><span class="text-[10px] font-bold">Studio</span></a>
-        <a href="tasks.html" class="flex flex-col items-center text-blue-600"><span class="material-symbols-outlined">assignment</span><span class="text-[10px] font-bold">Tasks</span></a>
-        <a href="wallet.html" class="flex flex-col items-center text-gray-400"><span class="material-symbols-outlined">account_balance_wallet</span><span class="text-[10px] font-bold">Wallet</span></a>
-        <a href="profile.html" class="flex flex-col items-center text-gray-400"><span class="material-symbols-outlined">person</span><span class="text-[10px] font-bold">Profile</span></a>
+    <nav class="fixed bottom-6 left-6 right-6 bg-white/90 backdrop-blur-xl border border-white/20 h-20 rounded-[32px] shadow-2xl flex items-center justify-around px-4 z-50">
+        <a href="dashboard.html" class="flex flex-col items-center gap-1 text-gray-400">
+            <span class="material-symbols-outlined text-2xl">home</span>
+            <span class="text-[10px] font-bold uppercase tracking-tighter">Home</span>
+        </a>
+        <a href="tasks.html" class="flex flex-col items-center gap-1 text-[#003ec7]">
+            <span class="material-symbols-outlined font-variation-fill text-2xl">explore</span>
+            <span class="text-[10px] font-bold uppercase tracking-tighter">Tasks</span>
+        </a>
+        <a href="wallet.html" class="flex flex-col items-center gap-1 text-gray-400">
+            <span class="material-symbols-outlined text-2xl">account_balance_wallet</span>
+            <span class="text-[10px] font-bold uppercase tracking-tighter">Wallet</span>
+        </a>
+        <a href="profile.html" class="flex flex-col items-center gap-1 text-gray-400">
+            <span class="material-symbols-outlined text-2xl">person</span>
+            <span class="text-[10px] font-bold uppercase tracking-tighter">Profile</span>
+        </a>
     </nav>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -53,19 +73,24 @@
         const db = firebase.database();
         const auth = firebase.auth();
 
-        // আইকন সেট করার লজিক
+        // আইকন সেট করার সঠিক লজিক (মেটেরিয়াল সিম্বল অনুযায়ী)
         function getIcon(type) {
-            if(type === 'facebook') return 'facebook';
-            if(type === 'youtube') return 'play_circle';
-            if(type === 'tiktok') return 'music_note';
-            return 'language';
+            const icons = {
+                'facebook': 'public',
+                'youtube': 'play_circle',
+                'tiktok': 'music_note',
+                'website': 'language',
+                'default': 'assignment'
+            };
+            return icons[type] || icons['default'];
         }
 
         auth.onAuthStateChanged(user => {
             if (user) {
-                // ইউজারের বর্তমান ব্যালেন্স দেখানো
+                // ইউজারের বর্তমান ব্যালেন্স রিয়েলটাইম আপডেট
                 db.ref('users/' + user.uid + '/balance').on('value', snap => {
-                    document.getElementById('balance-display').innerText = "৳ " + (snap.val() || 0).toFixed(2);
+                    const balance = snap.val() || 0;
+                    document.getElementById('balance-display').innerText = "৳ " + balance.toFixed(2);
                 });
 
                 // টাস্ক লিস্ট লোড করা
@@ -81,29 +106,40 @@
                 const container = document.getElementById('task-container');
                 
                 if (!tasks) {
-                    container.innerHTML = "<p class='text-center col-span-full text-gray-400'>No tasks available yet.</p>";
+                    container.innerHTML = `
+                        <div class="col-span-full text-center py-20 bg-white rounded-3xl border border-dashed border-gray-200">
+                            <p class="text-gray-400 font-bold">No tasks available right now.<br>Check back later!</p>
+                        </div>
+                    `;
                     return;
                 }
 
                 container.innerHTML = Object.keys(tasks).map(key => {
                     const task = tasks[key];
                     return `
-                        <div class="bg-white p-5 rounded-3xl shadow-sm border border-gray-50 flex flex-col justify-between">
-                            <div class="flex justify-between items-start mb-4">
-                                <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
-                                    <span class="material-symbols-outlined">${getIcon(task.type)}</span>
+                        <div class="bg-white p-6 rounded-[32px] shadow-sm border border-gray-50 flex flex-col justify-between hover:shadow-xl hover:border-blue-100 transition-all duration-300 group">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-[#003ec7] group-hover:bg-[#003ec7] group-hover:text-white transition-colors">
+                                    <span class="material-symbols-outlined text-3xl">${getIcon(task.type)}</span>
                                 </div>
                                 <div class="text-right">
-                                    <p class="text-[9px] uppercase font-bold text-gray-400">Reward</p>
-                                    <p class="text-lg font-black text-green-600">৳${parseFloat(task.reward).toFixed(2)}</p>
+                                    <p class="text-[10px] uppercase font-black text-gray-400 tracking-tighter">Reward</p>
+                                    <p class="text-xl font-black text-green-600 tracking-tight">৳${parseFloat(task.reward).toFixed(2)}</p>
                                 </div>
                             </div>
-                            <h3 class="font-bold text-gray-800">${task.title}</h3>
-                            <p class="text-[10px] text-gray-400 mb-4 flex items-center gap-1">
-                                <span class="material-symbols-outlined text-[12px]">schedule</span> ${task.time}
-                            </p>
-                            <a href="task-details.html?id=${key}" class="w-full py-3 bg-blue-50 text-[#003ec7] text-center rounded-2xl font-bold text-xs hover:bg-[#003ec7] hover:text-white transition-all">
-                                Open Task
+                            
+                            <div class="space-y-1 mb-6">
+                                <h3 class="font-bold text-gray-800 text-lg leading-tight">${task.title}</h3>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-[11px] text-gray-400 font-bold flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">schedule</span> ${task.time}
+                                    </span>
+                                    <span class="text-[11px] text-blue-500 font-bold uppercase tracking-widest">${task.type}</span>
+                                </div>
+                            </div>
+
+                            <a href="task-details.html?id=${key}" class="w-full py-4 bg-gray-50 text-[#003ec7] text-center rounded-2xl font-black text-sm hover:bg-[#003ec7] hover:text-white hover:shadow-lg hover:shadow-blue-200 transition-all active:scale-95">
+                                Start Task
                             </a>
                         </div>
                     `;
