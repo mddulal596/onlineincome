@@ -11,9 +11,7 @@
     
     <header class="p-6 bg-white border-b sticky top-0 z-50 flex justify-between items-center">
         <h1 class="text-xl font-bold text-[#003ec7]">Work Station</h1>
-        <div id="balance-display" class="bg-blue-50 text-[#003ec7] px-4 py-1 rounded-full font-bold text-sm border border-blue-100">
-            ৳ 0.00
-        </div>
+        <div id="balance-display" class="bg-blue-50 text-[#003ec7] px-4 py-1 rounded-full font-bold text-sm border border-blue-100">৳ 0.00</div>
     </header>
 
     <main class="p-6 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6" id="task-container">
@@ -61,15 +59,12 @@
                     container.innerHTML = "<p class='col-span-full text-center py-10 font-bold text-gray-400'>No tasks available.</p>";
                     return;
                 }
-
                 container.innerHTML = Object.keys(tasks).map(key => {
                     const task = tasks[key];
                     return `
                         <div class="bg-white p-6 rounded-[32px] shadow-sm border border-gray-50 flex flex-col justify-between">
                             <div class="flex justify-between items-start mb-6">
-                                <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-[#003ec7]">
-                                    <span class="material-symbols-outlined text-2xl">assignment</span>
-                                </div>
+                                <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-[#003ec7]"><span class="material-symbols-outlined text-2xl">assignment</span></div>
                                 <div class="text-right">
                                     <p class="text-[10px] font-bold text-gray-400">REWARD</p>
                                     <p class="text-xl font-black text-green-600">৳${parseFloat(task.reward).toFixed(2)}</p>
