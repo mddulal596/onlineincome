@@ -12,31 +12,38 @@
 <body class="pb-32">
 
     <header class="fixed top-0 w-full bg-white border-b px-6 py-4 z-50 flex justify-between items-center">
-        <h1 class="font-black text-[#003ec7] text-xl">Prosper</h1>
-        <div class="w-8 h-8 rounded-full bg-blue-100 overflow-hidden">
-            <img id="user-avatar" src="https://ui-avatars.com/api/?name=User" alt="U">
+        <h1 class="font-black text-[#003ec7] text-xl tracking-tighter">Prosper</h1>
+        <div class="w-9 h-9 rounded-full bg-blue-50 border border-blue-100 overflow-hidden shadow-sm">
+            <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=003ec7&color=fff" alt="Profile">
         </div>
     </header>
 
     <main class="pt-24 px-6 max-w-5xl mx-auto space-y-6">
         <section>
-            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Welcome Back,</p>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-1">Status: Active Artisan</p>
             <h2 id="user-name-display" class="text-3xl font-black text-gray-800 tracking-tight">Loading...</h2>
-            <p id="user-email-display" class="text-sm text-gray-500 font-medium"></p>
+            <p id="user-email-display" class="text-sm text-gray-500 font-medium opacity-80"></p>
         </section>
 
-        <section class="bg-gradient-to-br from-[#003ec7] to-[#005eff] rounded-[40px] p-8 text-white shadow-2xl">
-            <p class="text-xs font-bold opacity-70 uppercase mb-1">Available Balance</p>
-            <h3 id="user-balance" class="text-5xl font-black tracking-tighter">৳ 0.00</h3>
+        <section class="bg-gradient-to-br from-[#003ec7] to-[#005eff] rounded-[40px] p-8 text-white shadow-2xl relative overflow-hidden">
+            <div class="relative z-10">
+                <p class="text-xs font-bold opacity-70 uppercase tracking-widest mb-1">Available Balance</p>
+                <h3 id="user-balance" class="text-5xl font-black tracking-tighter">৳ 0.00</h3>
+            </div>
+            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
         </section>
 
         <div class="grid grid-cols-2 gap-4">
-            <a href="tasks.html" class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50 flex flex-col items-center gap-3">
-                <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-[#003ec7]"><span class="material-symbols-outlined">bolt</span></div>
+            <a href="tasks.html" class="bg-white p-6 rounded-[32px] shadow-sm border border-gray-100 flex flex-col items-center gap-3 active:scale-95 transition-transform">
+                <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-[#003ec7]">
+                    <span class="material-symbols-outlined font-bold">bolt</span>
+                </div>
                 <span class="font-bold text-sm">Tasks</span>
             </a>
-            <a href="wallet.html" class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50 flex flex-col items-center gap-3">
-                <div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-600"><span class="material-symbols-outlined">account_balance_wallet</span></div>
+            <a href="wallet.html" class="bg-white p-6 rounded-[32px] shadow-sm border border-gray-100 flex flex-col items-center gap-3 active:scale-95 transition-transform">
+                <div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-600">
+                    <span class="material-symbols-outlined font-bold">account_balance_wallet</span>
+                </div>
                 <span class="font-bold text-sm">Withdraw</span>
             </a>
         </div>
@@ -81,51 +88,25 @@
 
         auth.onAuthStateChanged(user => {
             if (user) {
-                // সরাসরি ইমেল দেখানো
+                // ইমেল সরাসরি Auth থেকে দেখাচ্ছি
                 document.getElementById('user-email-display').innerText = user.email;
 
-                // ডাটাবেস থেকে নাম এবং ব্যালেন্স আনা
+                // ডাটাবেস থেকে নাম এবং ব্যালেন্স লোড করা
                 db.ref('users/' + user.uid).on('value', snap => {
                     const data = snap.val() || {};
-                    const name = data.name || "User";
+                    const name = data.name || "Artisan User";
+                    const balance = data.balance || 0;
+
                     document.getElementById('user-name-display').innerText = name;
-                    document.getElementById('user-balance').innerText = "৳ " + (data.balance || 0).toFixed(2);
+                    document.getElementById('user-balance').innerText = "৳ " + balance.toFixed(2);
+                    
+                    // নাম অনুযায়ী প্রোফাইল পিকচার জেনারেট
                     document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=003ec7&color=fff&bold=true`;
                 });
-            } else { window.location.href = "login.html"; }
-        });
-   
-    auth.onAuthStateChanged(user => {
-    if (user) {
-        // ইমেল সরাসরি Auth থেকে আসবে
-        if(document.getElementById('p-email')) document.getElementById('p-email').innerText = user.email;
-        if(document.getElementById('user-email-display')) document.getElementById('user-email-display').innerText = user.email;
-
-        // ডাটাবেস থেকে নাম আনা
-        const userRef = db.ref('users/' + user.uid);
-        userRef.on('value', (snapshot) => {
-            const userData = snapshot.val();
-            if (userData && userData.name) {
-                // যেখানে যেখানে নাম দেখাতে চান
-                if(document.getElementById('p-name')) document.getElementById('p-name').innerText = userData.name;
-                if(document.getElementById('user-name-display')) document.getElementById('user-name-display').innerText = userData.name;
-                
-                // প্রোফাইল পিকচার আপডেট
-                const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=003ec7&color=fff&bold=true`;
-                if(document.getElementById('p-avatar')) document.getElementById('p-avatar').src = avatarUrl;
             } else {
-                // যদি ডাটাবেসে নাম না থাকে
-                if(document.getElementById('p-name')) document.getElementById('p-name').innerText = "Artisan User";
-                console.log("No name found in Database for this UID");
+                window.location.href = "login.html";
             }
-        }, (error) => {
-            console.error("Database Read Error: ", error);
         });
-    } else {
-        window.location.href = 'login.html';
-    }
-});
-
     </script>
 </body>
 </html>
