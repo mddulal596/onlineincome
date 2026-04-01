@@ -11,30 +11,38 @@
 </head>
 <body class="pb-32">
 
-    <header class="fixed top-0 w-full bg-white border-b px-6 py-4 z-50">
+    <header class="fixed top-0 w-full bg-white border-b px-6 py-4 z-50 flex justify-between items-center">
         <h1 class="font-black text-[#003ec7] text-xl">Prosper</h1>
+        <div class="w-8 h-8 rounded-full bg-blue-100 overflow-hidden">
+            <img id="user-avatar" src="https://ui-avatars.com/api/?name=User" alt="U">
+        </div>
     </header>
 
     <main class="pt-24 px-6 max-w-5xl mx-auto space-y-6">
-        <section class="bg-blue-600 rounded-[32px] p-8 text-white shadow-xl">
-            <p class="text-xs font-bold opacity-70 uppercase">Balance</p>
-            <h3 id="user-balance" class="text-4xl font-black">৳ 0.00</h3>
-            <p id="user-name" class="mt-2 opacity-90 font-bold">Loading User...</p>
+        <section>
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Welcome Back,</p>
+            <h2 id="user-name-display" class="text-3xl font-black text-gray-800 tracking-tight">Loading...</h2>
+            <p id="user-email-display" class="text-sm text-gray-500 font-medium"></p>
+        </section>
+
+        <section class="bg-gradient-to-br from-[#003ec7] to-[#005eff] rounded-[40px] p-8 text-white shadow-2xl">
+            <p class="text-xs font-bold opacity-70 uppercase mb-1">Available Balance</p>
+            <h3 id="user-balance" class="text-5xl font-black tracking-tighter">৳ 0.00</h3>
         </section>
 
         <div class="grid grid-cols-2 gap-4">
-            <a href="tasks.html" class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col items-center gap-2">
-                <span class="material-symbols-outlined text-blue-600">bolt</span>
+            <a href="tasks.html" class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50 flex flex-col items-center gap-3">
+                <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-[#003ec7]"><span class="material-symbols-outlined">bolt</span></div>
                 <span class="font-bold text-sm">Tasks</span>
             </a>
-            <a href="wallet.html" class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col items-center gap-2">
-                <span class="material-symbols-outlined text-green-600">account_balance_wallet</span>
-                <span class="font-bold text-sm">Wallet</span>
+            <a href="wallet.html" class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50 flex flex-col items-center gap-3">
+                <div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-600"><span class="material-symbols-outlined">account_balance_wallet</span></div>
+                <span class="font-bold text-sm">Withdraw</span>
             </a>
         </div>
     </main>
 
-    <nav class="fixed bottom-6 left-6 right-6 bg-white border border-gray-100 h-20 rounded-[32px] shadow-2xl flex items-center justify-around z-50">
+    <nav class="fixed bottom-6 left-6 right-6 bg-white/90 backdrop-blur-xl border border-gray-100 h-20 rounded-[32px] shadow-2xl flex items-center justify-around z-50">
         <a href="dashboard.html" class="flex flex-col items-center text-blue-600">
             <span class="material-symbols-outlined">home</span>
             <span class="text-[10px] font-bold">HOME</span>
@@ -73,14 +81,18 @@
 
         auth.onAuthStateChanged(user => {
             if (user) {
+                // সরাসরি ইমেল দেখানো
+                document.getElementById('user-email-display').innerText = user.email;
+
+                // ডাটাবেস থেকে নাম এবং ব্যালেন্স আনা
                 db.ref('users/' + user.uid).on('value', snap => {
                     const data = snap.val() || {};
-                    document.getElementById('user-name').innerText = data.name || "User";
+                    const name = data.name || "User";
+                    document.getElementById('user-name-display').innerText = name;
                     document.getElementById('user-balance').innerText = "৳ " + (data.balance || 0).toFixed(2);
+                    document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=003ec7&color=fff&bold=true`;
                 });
-            } else {
-                window.location.href = "login.html";
-            }
+            } else { window.location.href = "login.html"; }
         });
     </script>
 </body>
