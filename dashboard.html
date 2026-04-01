@@ -94,6 +94,38 @@
                 });
             } else { window.location.href = "login.html"; }
         });
+   
+    auth.onAuthStateChanged(user => {
+    if (user) {
+        // ইমেল সরাসরি Auth থেকে আসবে
+        if(document.getElementById('p-email')) document.getElementById('p-email').innerText = user.email;
+        if(document.getElementById('user-email-display')) document.getElementById('user-email-display').innerText = user.email;
+
+        // ডাটাবেস থেকে নাম আনা
+        const userRef = db.ref('users/' + user.uid);
+        userRef.on('value', (snapshot) => {
+            const userData = snapshot.val();
+            if (userData && userData.name) {
+                // যেখানে যেখানে নাম দেখাতে চান
+                if(document.getElementById('p-name')) document.getElementById('p-name').innerText = userData.name;
+                if(document.getElementById('user-name-display')) document.getElementById('user-name-display').innerText = userData.name;
+                
+                // প্রোফাইল পিকচার আপডেট
+                const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=003ec7&color=fff&bold=true`;
+                if(document.getElementById('p-avatar')) document.getElementById('p-avatar').src = avatarUrl;
+            } else {
+                // যদি ডাটাবেসে নাম না থাকে
+                if(document.getElementById('p-name')) document.getElementById('p-name').innerText = "Artisan User";
+                console.log("No name found in Database for this UID");
+            }
+        }, (error) => {
+            console.error("Database Read Error: ", error);
+        });
+    } else {
+        window.location.href = 'login.html';
+    }
+});
+
     </script>
 </body>
 </html>
