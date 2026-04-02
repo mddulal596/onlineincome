@@ -13,15 +13,14 @@
     <header class="fixed top-0 w-full bg-white border-b px-6 py-4 z-50 flex justify-between items-center">
         <h1 class="font-black text-[#003ec7] text-xl">Prosper</h1>
         <div class="w-9 h-9 rounded-full bg-blue-50 overflow-hidden border">
-            <img id="user-avatar" src="https://ui-avatars.com/api/?name=User" alt="U">
+            <img id="user-avatar" src="" alt="U">
         </div>
     </header>
 
     <main class="pt-24 px-6 max-w-5xl mx-auto space-y-6">
         <section>
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Status: Active</p>
-            <h2 id="user-name-display" class="text-3xl font-black text-gray-800">Loading...</h2>
-            <p id="user-email-display" class="text-sm text-gray-500"></p>
+            <h2 id="user-name" class="text-3xl font-black text-gray-800">Loading...</h2>
+            <p id="user-email" class="text-sm text-gray-500"></p>
         </section>
 
         <section class="bg-gradient-to-br from-[#003ec7] to-[#005eff] rounded-[40px] p-8 text-white shadow-2xl">
@@ -29,13 +28,13 @@
             <h3 id="user-balance" class="text-5xl font-black">৳ 0.00</h3>
         </section>
 
-        <div class="grid grid-cols-2 gap-4">
-            <a href="tasks.html" class="bg-white p-6 rounded-[32px] shadow-sm border flex flex-col items-center gap-3">
-                <span class="material-symbols-outlined text-[#003ec7]">bolt</span>
+        <div class="grid grid-cols-2 gap-4 text-center">
+            <a href="tasks.html" class="bg-white p-6 rounded-[32px] shadow-sm border border-gray-100 flex flex-col items-center gap-3">
+                <span class="material-symbols-outlined text-[#003ec7] text-3xl">bolt</span>
                 <span class="font-bold text-sm">Tasks</span>
             </a>
-            <a href="wallet.html" class="bg-white p-6 rounded-[32px] shadow-sm border flex flex-col items-center gap-3">
-                <span class="material-symbols-outlined text-green-600">account_balance_wallet</span>
+            <a href="wallet.html" class="bg-white p-6 rounded-[32px] shadow-sm border border-gray-100 flex flex-col items-center gap-3">
+                <span class="material-symbols-outlined text-green-600 text-3xl">account_balance_wallet</span>
                 <span class="font-bold text-sm">Withdraw</span>
             </a>
         </div>
@@ -63,15 +62,21 @@
             appId: "1:79088960253:web:4a39dbe9d3207ccca1f494"
         };
         firebase.initializeApp(firebaseConfig);
-        
-        firebase.auth().onAuthStateChanged(user => {
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        auth.onAuthStateChanged(user => {
             if (user) {
-                document.getElementById('user-email-display').innerText = user.email;
-                firebase.database().ref('users/' + user.uid).on('value', snap => {
+                db.ref('users/' + user.uid).on('value', snap => {
                     const data = snap.val() || {};
                     const name = data.name || "Artisan User";
-                    document.getElementById('user-name-display').innerText = name;
+                    const email = data.email || user.email;
+
+                    document.getElementById('user-name').innerText = name;
+                    document.getElementById('user-email').innerText = email;
                     document.getElementById('user-balance').innerText = "৳ " + (data.balance || 0).toFixed(2);
+                    
+                    // ইমেজ এরর ফিক্স (লাল ক্রস আসবে না)
                     document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=003ec7&color=fff&bold=true`;
                 });
             } else { window.location.href = "index.html"; }
