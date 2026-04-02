@@ -76,7 +76,8 @@
                     name: name,
                     email: email,
                     balance: 0,
-                    tasksDone: 0
+                    tasksDone: 0,
+                    createdAt: Date.now()
                 });
                 window.location.href = 'dashboard.html';
             } catch (err) { alert(err.message); }
