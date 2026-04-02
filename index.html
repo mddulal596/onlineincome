@@ -1,66 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="light" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Studio - Financial Atelier</title>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Prosper - Access</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@800&family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #fcf9f8; }
-        .font-headline { font-family: 'Manrope', sans-serif; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .editorial-gradient { background: linear-gradient(135deg, #003ec7 0%, #0052ff 100%); }
     </style>
 </head>
-<body class="pb-32">
-    <header class="p-6 flex justify-between items-center bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
-        <h1 class="text-xl font-black text-[#003ec7] tracking-tighter font-headline">Financial Atelier</h1>
-        <div class="relative">
-            <span class="material-symbols-outlined text-gray-400">notifications</span>
-            <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-        </div>
-    </header>
-
-    <main class="p-6 max-w-xl mx-auto space-y-8">
-        <div class="bg-gradient-to-br from-[#003ec7] to-[#005eff] rounded-[32px] p-8 text-white shadow-xl relative overflow-hidden">
-            <div class="relative z-10">
-                <p class="text-xs uppercase opacity-80 font-bold tracking-widest mb-1">Welcome Back</p>
-                <h2 class="text-3xl font-black font-headline" id="user-display-name">Loading...</h2>
+<body class="min-h-screen flex items-center justify-center p-6">
+    <main class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 bg-white rounded-[2rem] shadow-xl overflow-hidden border border-gray-100">
+        <section class="hidden lg:flex lg:col-span-7 editorial-gradient p-16 text-white flex-col justify-between">
+            <div>
+                <h1 class="text-6xl font-black leading-tight mb-6">Wealth with <br/><span class="text-green-300">Precision.</span></h1>
+                <p class="text-xl opacity-80">The atelier of modern digital artisans.</p>
             </div>
-            <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
-        </div>
-
-        <div class="flex justify-between items-center px-2">
-            <h3 class="font-black text-xl text-gray-800 font-headline">Featured Tasks</h3>
-            <a href="tasks.html" class="text-[#003ec7] text-xs font-bold hover:underline">View All</a>
-        </div>
-        
-        <div id="featured-tasks-container" class="space-y-4">
-            <div class="flex flex-col items-center py-10 opacity-20">
-                <span class="material-symbols-outlined text-4xl animate-spin">refresh</span>
+        </section>
+        <section class="col-span-1 lg:col-span-5 p-12">
+            <div id="login-view">
+                <h2 class="text-4xl font-black mb-8 tracking-tight">Welcome</h2>
+                <form id="login-form" class="space-y-4">
+                    <input id="login-email" class="w-full p-4 bg-gray-50 rounded-xl outline-none" placeholder="Email" type="email" required>
+                    <input id="login-password" class="w-full p-4 bg-gray-50 rounded-xl outline-none" placeholder="Password" type="password" required>
+                    <button class="w-full editorial-gradient text-white font-bold py-4 rounded-xl shadow-lg">Sign In</button>
+                </form>
+                <p class="mt-8 text-sm text-center">New here? <button onclick="toggleAuth('signup')" class="text-blue-600 font-bold">Create Account</button></p>
             </div>
-        </div>
+            <div id="signup-view" class="hidden">
+                <h2 class="text-4xl font-black mb-8 tracking-tight">Join Us</h2>
+                <form id="signup-form" class="space-y-4">
+                    <input id="signup-name" class="w-full p-4 bg-gray-50 rounded-xl outline-none" placeholder="Full Name" type="text" required>
+                    <input id="signup-email" class="w-full p-4 bg-gray-50 rounded-xl outline-none" placeholder="Email" type="email" required>
+                    <input id="signup-password" class="w-full p-4 bg-gray-50 rounded-xl outline-none" placeholder="Password" type="password" required>
+                    <button class="w-full editorial-gradient text-white font-bold py-4 rounded-xl shadow-lg">Join Now</button>
+                </form>
+                <p class="mt-8 text-sm text-center">Have account? <button onclick="toggleAuth('login')" class="text-blue-600 font-bold">Sign In</button></p>
+            </div>
+        </section>
     </main>
-
-    <nav class="fixed bottom-6 left-6 right-6 bg-white/90 backdrop-blur-xl border border-white/20 h-20 rounded-[32px] shadow-2xl flex items-center justify-around px-4 z-50">
-        <a href="index.html" class="flex flex-col items-center gap-1 text-[#003ec7]">
-            <span class="material-symbols-outlined font-variation-fill text-2xl">dashboard</span>
-            <span class="text-[10px] font-bold uppercase tracking-tighter">Studio</span>
-        </a>
-        <a href="tasks.html" class="flex flex-col items-center gap-1 text-gray-400">
-            <span class="material-symbols-outlined text-2xl">explore</span>
-            <span class="text-[10px] font-bold uppercase tracking-tighter">Tasks</span>
-        </a>
-        <a href="wallet.html" class="flex flex-col items-center gap-1 text-gray-400">
-            <span class="material-symbols-outlined text-2xl">account_balance_wallet</span>
-            <span class="text-[10px] font-bold uppercase tracking-tighter">Wallet</span>
-        </a>
-        <a href="profile.html" class="flex flex-col items-center gap-1 text-gray-400">
-            <span class="material-symbols-outlined text-2xl">person</span>
-            <span class="text-[10px] font-bold uppercase tracking-tighter">Profile</span>
-        </a>
-    </nav>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
@@ -76,57 +56,39 @@
             messagingSenderId: "79088960253",
             appId: "1:79088960253:web:4a39dbe9d3207ccca1f494"
         };
-        
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
 
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                // ১. ইউজারের নাম দেখানো (Database থেকে)
-                db.ref('users/' + user.uid + '/name').once('value', snap => {
-                    document.getElementById('user-display-name').innerText = snap.val() || "User";
-                });
+        window.toggleAuth = (view) => {
+            document.getElementById('login-view').classList.toggle('hidden', view === 'signup');
+            document.getElementById('signup-view').classList.toggle('hidden', view === 'login');
+        };
 
-                // ২. টাস্ক লিস্ট ডাটাবেস থেকে লোড করা (শুধুমাত্র ৩টি Featured টাস্ক)
-                loadFeaturedTasks();
-            } else {
-                window.location.href = "login.html";
-            }
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            try {
+                const res = await auth.createUserWithEmailAndPassword(email, password);
+                await db.ref('users/' + res.user.uid).set({
+                    name: name,
+                    email: email,
+                    balance: 0,
+                    tasksDone: 0
+                });
+                window.location.href = 'dashboard.html';
+            } catch (err) { alert(err.message); }
         });
 
-        function loadFeaturedTasks() {
-            db.ref('tasks').limitToFirst(3).on('value', snap => {
-                const tasks = snap.val();
-                const container = document.getElementById('featured-tasks-container');
-                
-                if (!tasks) {
-                    container.innerHTML = "<p class='text-center text-gray-400'>No tasks available.</p>";
-                    return;
-                }
-
-                container.innerHTML = Object.keys(tasks).map(key => {
-                    const task = tasks[key];
-                    return `
-                        <a href="task-details.html?id=${key}" class="block bg-white p-6 rounded-3xl shadow-sm border border-gray-50 hover:border-blue-100 hover:shadow-md transition-all group">
-                            <div class="flex justify-between items-center">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-[#003ec7] group-hover:bg-[#003ec7] group-hover:text-white transition-all">
-                                        <span class="material-symbols-outlined text-2xl">assignment</span>
-                                    </div>
-                                    <div>
-                                        <span class="text-[9px] font-black text-blue-600 uppercase tracking-tighter">${task.type}</span>
-                                        <h4 class="font-bold text-gray-800 text-base">${task.title}</h4>
-                                        <p class="text-xs text-gray-400 font-medium">Earn ৳${parseFloat(task.reward).toFixed(2)} • ${task.time}</p>
-                                    </div>
-                                </div>
-                                <span class="material-symbols-outlined text-gray-300 group-hover:text-[#003ec7] transition-all">chevron_right</span>
-                            </div>
-                        </a>
-                    `;
-                }).join('');
-            });
-        }
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await auth.signInWithEmailAndPassword(document.getElementById('login-email').value, document.getElementById('login-password').value);
+                window.location.href = 'dashboard.html';
+            } catch (err) { alert("Login failed!"); }
+        });
     </script>
 </body>
 </html>
