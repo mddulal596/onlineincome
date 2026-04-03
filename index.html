@@ -1,81 +1,113 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Home</title>
-<script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<body class="p-6">
-
-<h2 id="user"></h2>
-
-<div id="tasks"></div>
-
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-
+<!-- SAME UI, ONLY SCRIPT UPDATED -->
 <script>
 const firebaseConfig = {
-apiKey: "AIzaSyAtYq8JTQXdMmrwhc3W96g7KfqThZcTA_4",
-authDomain: "onlineincome-326f9.firebaseapp.com",
-databaseURL: "https://onlineincome-326f9-default-rtdb.firebaseio.com",
-projectId: "onlineincome-326f9"
+    apiKey: "AIzaSyAtYq8JTQXdMmrwhc3W96g7KfqThZcTA_4",
+    authDomain: "onlineincome-326f9.firebaseapp.com",
+    databaseURL: "https://onlineincome-326f9-default-rtdb.firebaseio.com",
+    projectId: "onlineincome-326f9",
+    storageBucket: "onlineincome-326f9.firebasestorage.app",
+    messagingSenderId: "79088960253",
+    appId: "1:79088960253:web:4a39dbe9d3207ccca1f494"
 };
 
 firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth();
-const db=firebase.database();
+const auth = firebase.auth();
+const db = firebase.database();
 
-auth.onAuthStateChanged(user=>{
-if(user){
-db.ref('users/'+user.uid+'/name').once('value').then(snap=>{
-user.innerText=snap.val()||"User";
+auth.onAuthStateChanged(user => {
+    if (user) {
+
+        // ✅ USER AUTO CREATE
+        db.ref('users/' + user.uid).once('value').then(snap => {
+            if (!snap.exists()) {
+                db.ref('users/' + user.uid).set({
+                    name: "User",
+                    balance: 0,
+                    createdAt: Date.now()
+                });
+            }
+        });
+
+        // ✅ USER NAME LOAD
+        db.ref('users/' + user.uid + '/name').once('value', snap => {
+            document.getElementById('user-display-name').innerText = snap.val() || "User";
+        });
+
+        // ✅ DAILY BONUS AUTO (10৳)
+        giveDailyBonus(user.uid);
+
+        // ✅ TASK LOAD
+        loadFeaturedTasks();
+
+    } else {
+        window.location.href = "login.html";
+    }
 });
 
-loadTasks();
-}else{
-location="login.html";
+function loadFeaturedTasks() {
+    db.ref('tasks').limitToFirst(3).on('value', snap => {
+        const tasks = snap.val();
+        const container = document.getElementById('featured-tasks-container');
+
+        if (!tasks) {
+            container.innerHTML = "<p class='text-center text-gray-400'>No tasks available.</p>";
+            return;
+        }
+
+        container.innerHTML = Object.keys(tasks).map(key => {
+            const task = tasks[key];
+
+            return `
+            <div onclick="completeTask('${key}', ${task.reward})"
+            class="block bg-white p-6 rounded-3xl shadow-sm border border-gray-50 hover:border-blue-100 hover:shadow-md transition-all group cursor-pointer">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-[#003ec7]">
+                            <span class="material-symbols-outlined text-2xl">assignment</span>
+                        </div>
+                        <div>
+                            <span class="text-[9px] font-black text-blue-600 uppercase">${task.type}</span>
+                            <h4 class="font-bold text-gray-800 text-base">${task.title}</h4>
+                            <p class="text-xs text-gray-400">Earn ৳${parseFloat(task.reward).toFixed(2)}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    });
 }
-});
 
-function loadTasks(){
-db.ref('tasks').on('value',snap=>{
-let html="";
-let data=snap.val();
+function completeTask(taskId, reward) {
+    const user = auth.currentUser;
 
-for(let id in data){
-let t=data[id];
+    db.ref('completedTasks/' + user.uid + '/' + taskId).once('value').then(snap => {
+        if (snap.exists()) {
+            alert("Already completed");
+            return;
+        }
 
-html+=`
-<div class="bg-white p-4 mb-2">
-<h3>${t.title}</h3>
-<p>৳${t.reward}</p>
-<button onclick="complete('${id}',${t.reward})">Complete</button>
-</div>`;
-}
-tasks.innerHTML=html;
-});
-}
+        // mark complete
+        db.ref('completedTasks/' + user.uid + '/' + taskId).set(true);
 
-function complete(id,reward){
-let user=auth.currentUser;
+        // add balance
+        db.ref('users/' + user.uid + '/balance').transaction(b => (b || 0) + reward);
 
-db.ref('completedTasks/'+user.uid+'/'+id).once('value').then(s=>{
-if(s.exists()){
-alert("Already done");
-return;
+        alert("Reward Added!");
+    });
 }
 
-db.ref('completedTasks/'+user.uid+'/'+id).set(true);
+// ✅ DAILY BONUS FUNCTION
+function giveDailyBonus(uid) {
+    const today = new Date().toDateString();
 
-db.ref('users/'+user.uid+'/balance').transaction(b=>(b||0)+reward);
+    db.ref('dailyBonus/' + uid).once('value').then(snap => {
+        if (snap.val() === today) return;
 
-alert("Earned!");
-});
+        db.ref('dailyBonus/' + uid).set(today);
+
+        db.ref('users/' + uid + '/balance').transaction(b => (b || 0) + 10);
+
+        console.log("Daily bonus added");
+    });
 }
 </script>
-
-</body>
-</html>
