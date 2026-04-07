@@ -8,6 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
 <!-- Icons -->
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script id="tailwind-config">
       tailwind.config = {
@@ -256,8 +258,8 @@
 <!-- Firebase Integration -->
 <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // Provided Firebase Configuration
         const firebaseConfig = {
@@ -320,8 +322,25 @@
                 case 'auth/invalid-email': return 'Please provide a valid email address.';
                 case 'auth/weak-password': return 'Password should be at least 6 characters.';
                 case 'auth/too-many-requests': return 'Too many attempts. Access temporarily restricted.';
+                case 'account-banned': return 'Your account has been banned. Please contact support.';
                 default: return error.message;
             }
+        };
+
+        // Banned Check Function
+        const checkBannedStatus = async (user) => {
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists() && userDoc.data().status === 'Banned') {
+                await signOut(auth);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Account Restricted',
+                    text: 'Your account has been banned. Please contact support.',
+                    confirmButtonColor: '#003ec7'
+                });
+                return true;
+            }
+            return false;
         };
 
         // Login Logic
@@ -331,8 +350,12 @@
             setLoadingState('login-form', true);
 
             try {
-                await signInWithEmailAndPassword(auth, email, password);
-                // On success, onAuthStateChanged will handle redirection
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const isBanned = await checkBannedStatus(userCredential.user);
+                if (isBanned) {
+                    setLoadingState('login-form', false);
+                }
+                // If not banned, onAuthStateChanged will handle redirection
             } catch (error) {
                 errorEl.textContent = getFriendlyErrorMessage(error);
                 errorEl.classList.remove('hidden');
@@ -357,13 +380,14 @@
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                // Create artisan document in Firestore with balance: 0, referrals: 0, and name
+                // Create artisan document in Firestore
                 await setDoc(doc(db, "users", user.uid), {
                     name: name,
                     email: email,
                     balance: 0,
                     referrals: 0,
                     role: 'artisan',
+                    status: 'Active',
                     createdAt: serverTimestamp()
                 });
                 
@@ -384,8 +408,17 @@
         });
 
         // Auth State Observer - Handles Redirection
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
+                // Verify status before allowing entry
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists() && userDoc.data().status === 'Banned') {
+                    // This case is handled in login/signup calls, 
+                    // but guard against persistent sessions.
+                    await signOut(auth);
+                    return;
+                }
+
                 // Smooth transition to dashboard
                 document.body.classList.add('opacity-0', 'transition-opacity', 'duration-500');
                 setTimeout(() => {
