@@ -1,113 +1,169 @@
-<!-- SAME UI, ONLY SCRIPT UPDATED -->
-<script>
-const firebaseConfig = {
-    apiKey: "AIzaSyAtYq8JTQXdMmrwhc3W96g7KfqThZcTA_4",
-    authDomain: "onlineincome-326f9.firebaseapp.com",
-    databaseURL: "https://onlineincome-326f9-default-rtdb.firebaseio.com",
-    projectId: "onlineincome-326f9",
-    storageBucket: "onlineincome-326f9.firebasestorage.app",
-    messagingSenderId: "79088960253",
-    appId: "1:79088960253:web:4a39dbe9d3207ccca1f494"
-};
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prosper - Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #fcf9f8; }
+        .font-headline { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="pb-32">
+    <header class="p-6 flex justify-between items-center bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
+        <h1 class="text-xl font-black text-[#003ec7] tracking-tighter font-headline">Prosper</h1>
+        <div class="flex items-center gap-3">
+            <div class="text-right">
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Welcome</p>
+                <p id="user-display-name" class="text-xs font-black text-gray-800">Loading...</p>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-blue-50 border overflow-hidden">
+                <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=003ec7&color=fff" class="w-full h-full object-cover">
+            </div>
+        </div>
+    </header>
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.database();
+    <main class="p-6 max-w-5xl mx-auto space-y-8">
+        <section class="bg-gradient-to-br from-[#003ec7] to-[#0052ff] rounded-[40px] p-8 text-white shadow-2xl relative overflow-hidden">
+            <p class="text-xs font-bold opacity-70 uppercase tracking-widest mb-1">Total Balance</p>
+            <h3 id="user-balance" class="text-5xl font-black">৳ 0.00</h3>
+            <div class="absolute -right-4 -bottom-4 opacity-10">
+                <span class="material-symbols-outlined text-9xl">payments</span>
+            </div>
+        </section>
 
-auth.onAuthStateChanged(user => {
-    if (user) {
+        <section>
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-black text-gray-800 font-headline">Featured Tasks</h3>
+                <a href="tasks.html" class="text-blue-600 text-sm font-bold">View All</a>
+            </div>
+            <div id="featured-tasks-container" class="space-y-4">
+                <p class="text-center text-gray-400 py-10">Loading tasks...</p>
+            </div>
+        </section>
+    </main>
 
-        // ✅ USER AUTO CREATE
-        db.ref('users/' + user.uid).once('value').then(snap => {
-            if (!snap.exists()) {
-                db.ref('users/' + user.uid).set({
-                    name: "User",
-                    balance: 0,
-                    createdAt: Date.now()
+    <nav class="fixed bottom-6 left-6 right-6 bg-white/90 backdrop-blur-xl border border-white/20 h-20 rounded-[32px] shadow-2xl flex items-center justify-around z-50">
+        <a href="index.html" class="flex flex-col items-center gap-1 text-blue-600">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">home</span>
+            <span class="text-[10px] font-black">HOME</span>
+        </a>
+        <a href="tasks.html" class="flex flex-col items-center gap-1 text-gray-400">
+            <span class="material-symbols-outlined">explore</span>
+            <span class="text-[10px] font-bold">TASKS</span>
+        </a>
+        <a href="wallet.html" class="flex flex-col items-center gap-1 text-gray-400">
+            <span class="material-symbols-outlined">account_balance_wallet</span>
+            <span class="text-[10px] font-bold">WALLET</span>
+        </a>
+        <a href="profile.html" class="flex flex-col items-center gap-1 text-gray-400">
+            <span class="material-symbols-outlined">person</span>
+            <span class="text-[10px] font-bold">PROFILE</span>
+        </a>
+    </nav>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAtYq8JTQXdMmrwhc3W96g7KfqThZcTA_4",
+            authDomain: "onlineincome-326f9.firebaseapp.com",
+            databaseURL: "https://onlineincome-326f9-default-rtdb.firebaseio.com",
+            projectId: "onlineincome-326f9",
+            storageBucket: "onlineincome-326f9.firebasestorage.app",
+            messagingSenderId: "79088960253",
+            appId: "1:79088960253:web:4a39dbe9d3207ccca1f494"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // ✅ USER AUTO CREATE (If not exists)
+                db.ref('users/' + user.uid).once('value').then(snap => {
+                    if (!snap.exists()) {
+                        db.ref('users/' + user.uid).set({
+                            name: "User",
+                            email: user.email,
+                            balance: 0,
+                            tasksDone: 0,
+                            createdAt: Date.now()
+                        });
+                    }
                 });
+
+                // ✅ REAL-TIME UI UPDATE (Name, Balance, Image)
+                db.ref('users/' + user.uid).on('value', snap => {
+                    const data = snap.val() || {};
+                    const name = data.name || "User";
+                    document.getElementById('user-display-name').innerText = name;
+                    document.getElementById('user-balance').innerText = "৳ " + (data.balance || 0).toFixed(2);
+                    document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=003ec7&color=fff&bold=true`;
+                });
+
+                // ✅ DAILY BONUS
+                giveDailyBonus(user.uid);
+
+                // ✅ TASK LOAD
+                loadFeaturedTasks();
+
+            } else {
+                window.location.href = "login.html";
             }
         });
 
-        // ✅ USER NAME LOAD
-        db.ref('users/' + user.uid + '/name').once('value', snap => {
-            document.getElementById('user-display-name').innerText = snap.val() || "User";
-        });
+        function loadFeaturedTasks() {
+            db.ref('tasks').limitToFirst(3).on('value', snap => {
+                const tasks = snap.val();
+                const container = document.getElementById('featured-tasks-container');
 
-        // ✅ DAILY BONUS AUTO (10৳)
-        giveDailyBonus(user.uid);
+                if (!tasks) {
+                    container.innerHTML = "<p class='text-center text-gray-400 py-10'>No tasks available right now.</p>";
+                    return;
+                }
 
-        // ✅ TASK LOAD
-        loadFeaturedTasks();
-
-    } else {
-        window.location.href = "login.html";
-    }
-});
-
-function loadFeaturedTasks() {
-    db.ref('tasks').limitToFirst(3).on('value', snap => {
-        const tasks = snap.val();
-        const container = document.getElementById('featured-tasks-container');
-
-        if (!tasks) {
-            container.innerHTML = "<p class='text-center text-gray-400'>No tasks available.</p>";
-            return;
+                container.innerHTML = Object.keys(tasks).map(key => {
+                    const task = tasks[key];
+                    return `
+                    <div onclick="window.location.href='task-details.html?id=${key}'"
+                    class="block bg-white p-6 rounded-3xl shadow-sm border border-gray-50 hover:border-blue-100 hover:shadow-md transition-all group cursor-pointer">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-[#003ec7]">
+                                    <span class="material-symbols-outlined text-2xl">assignment</span>
+                                </div>
+                                <div>
+                                    <span class="text-[9px] font-black text-blue-600 uppercase tracking-tighter">${task.type || 'TASK'}</span>
+                                    <h4 class="font-bold text-gray-800 text-base">${task.title}</h4>
+                                    <p class="text-xs text-gray-400">Earn ৳${parseFloat(task.reward).toFixed(2)}</p>
+                                </div>
+                            </div>
+                            <span class="material-symbols-outlined text-gray-300 group-hover:text-blue-600 transition-all">chevron_right</span>
+                        </div>
+                    </div>`;
+                }).join('');
+            });
         }
 
-        container.innerHTML = Object.keys(tasks).map(key => {
-            const task = tasks[key];
-
-            return `
-            <div onclick="completeTask('${key}', ${task.reward})"
-            class="block bg-white p-6 rounded-3xl shadow-sm border border-gray-50 hover:border-blue-100 hover:shadow-md transition-all group cursor-pointer">
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-[#003ec7]">
-                            <span class="material-symbols-outlined text-2xl">assignment</span>
-                        </div>
-                        <div>
-                            <span class="text-[9px] font-black text-blue-600 uppercase">${task.type}</span>
-                            <h4 class="font-bold text-gray-800 text-base">${task.title}</h4>
-                            <p class="text-xs text-gray-400">Earn ৳${parseFloat(task.reward).toFixed(2)}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-        }).join('');
-    });
-}
-
-function completeTask(taskId, reward) {
-    const user = auth.currentUser;
-
-    db.ref('completedTasks/' + user.uid + '/' + taskId).once('value').then(snap => {
-        if (snap.exists()) {
-            alert("Already completed");
-            return;
+        function giveDailyBonus(uid) {
+            const today = new Date().toDateString();
+            db.ref('dailyBonus/' + uid).once('value').then(snap => {
+                if (snap.val() === today) return;
+                
+                db.ref('dailyBonus/' + uid).set(today);
+                db.ref('users/' + uid + '/balance').transaction(b => (b || 0) + 10);
+                
+                // Optional: Notify user
+                console.log("৳10 Daily bonus added!");
+            });
         }
-
-        // mark complete
-        db.ref('completedTasks/' + user.uid + '/' + taskId).set(true);
-
-        // add balance
-        db.ref('users/' + user.uid + '/balance').transaction(b => (b || 0) + reward);
-
-        alert("Reward Added!");
-    });
-}
-
-// ✅ DAILY BONUS FUNCTION
-function giveDailyBonus(uid) {
-    const today = new Date().toDateString();
-
-    db.ref('dailyBonus/' + uid).once('value').then(snap => {
-        if (snap.val() === today) return;
-
-        db.ref('dailyBonus/' + uid).set(today);
-
-        db.ref('users/' + uid + '/balance').transaction(b => (b || 0) + 10);
-
-        console.log("Daily bonus added");
-    });
-}
-</script>
+    </script>
+</body>
+    </html>
