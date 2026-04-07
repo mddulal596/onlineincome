@@ -1,122 +1,337 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
 
-<body class="bg-gray-100 p-6">
-
-<div id="login-card" class="max-w-md mx-auto bg-white p-6 rounded-xl shadow">
-<h2 class="text-xl font-bold mb-4 text-center">Admin Login</h2>
-<input id="email" placeholder="Email" class="w-full p-3 border mb-3">
-<input id="pass" type="password" placeholder="Password" class="w-full p-3 border mb-3">
-<button onclick="login()" class="w-full bg-blue-600 text-white p-3 rounded">Login</button>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Financial Atelier Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-lowest": "#ffffff",
+                      "primary-fixed": "#dde1ff",
+                      "on-primary-fixed": "#001452",
+                      "inverse-primary": "#b7c4ff",
+                      "on-tertiary-container": "#cee8ff",
+                      "surface-variant": "#e5e2e1",
+                      "inverse-surface": "#313030",
+                      "background": "#fcf9f8",
+                      "secondary-container": "#5cfd80",
+                      "on-tertiary": "#ffffff",
+                      "surface": "#fcf9f8",
+                      "on-tertiary-fixed-variant": "#004b70",
+                      "on-primary-fixed-variant": "#0038b6",
+                      "outline": "#737688",
+                      "surface-container-highest": "#e5e2e1",
+                      "inverse-on-surface": "#f3f0ef",
+                      "on-secondary-fixed-variant": "#00531e",
+                      "surface-container-low": "#f6f3f2",
+                      "primary": "#003ec7",
+                      "on-secondary": "#ffffff",
+                      "on-background": "#1c1b1b",
+                      "tertiary-fixed": "#cae6ff",
+                      "surface-container-high": "#ebe7e7",
+                      "error-container": "#ffdad6",
+                      "secondary-fixed": "#69ff87",
+                      "tertiary-fixed-dim": "#8dcdff",
+                      "primary-container": "#0052ff",
+                      "tertiary": "#00537b",
+                      "surface-tint": "#004ced",
+                      "on-secondary-container": "#00732c",
+                      "secondary": "#006e2a",
+                      "on-primary-container": "#dfe3ff",
+                      "surface-container": "#f0edec",
+                      "surface-dim": "#dcd9d9",
+                      "outline-variant": "#c3c5d9",
+                      "surface-bright": "#fcf9f8",
+                      "tertiary-container": "#006c9f",
+                      "error": "#ba1a1a",
+                      "secondary-fixed-dim": "#3ce36a",
+                      "on-error-container": "#93000a",
+                      "on-error": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-fixed": "#001e30",
+                      "on-surface-variant": "#434656",
+                      "on-surface": "#1c1b1b",
+                      "primary-fixed-dim": "#b7c4ff",
+                      "on-secondary-fixed": "#002108"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Manrope"],
+                      "body": ["Inter"],
+                      "label": ["Inter"]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen">
+<!-- LOGIN SCREEN (INITIAL VIEW) -->
+<section class="min-h-screen flex items-center justify-center bg-surface px-6" id="login-screen">
+<div class="max-w-md w-full">
+<div class="text-center mb-10">
+<span class="text-[10px] uppercase tracking-widest font-headline font-bold text-primary mb-2 block">Financial Atelier</span>
+<h1 class="text-3xl font-extrabold text-on-surface tracking-tight">Admin Login</h1>
 </div>
-
-<div id="dashboard" class="hidden max-w-md mx-auto space-y-4">
-
-<h2 class="text-xl font-bold">Admin Dashboard</h2>
-
-<input id="title" placeholder="Task Title" class="w-full p-3 border">
-<input id="reward" type="number" placeholder="Reward" class="w-full p-3 border">
-<input id="link" placeholder="Link" class="w-full p-3 border">
-
-<button onclick="addTask()" class="w-full bg-green-600 text-white p-3 rounded">Add Task</button>
-
-<h3 class="font-bold mt-6">Withdraw Requests</h3>
-<div id="withdraw-list"></div>
-
-<button onclick="logout()" class="w-full bg-red-500 text-white p-3 rounded">Logout</button>
-
+<div class="bg-surface-container-lowest p-10 rounded-xl shadow-[0_10px_32px_rgba(28,27,27,0.04)] border border-outline-variant/15">
+<form class="space-y-6">
+<div class="space-y-2">
+<label class="text-sm font-medium text-on-surface/70 ml-1">Email Address</label>
+<input class="w-full px-4 py-3 rounded-lg bg-surface-container-high border-none focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all duration-200 outline-none text-on-surface" placeholder="admin@financialatelier.com" type="email"/>
 </div>
-
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-
+<div class="space-y-2">
+<label class="text-sm font-medium text-on-surface/70 ml-1">Password</label>
+<input class="w-full px-4 py-3 rounded-lg bg-surface-container-high border-none focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all duration-200 outline-none text-on-surface" placeholder="••••••••" type="password"/>
+</div>
+<button class="w-full py-4 px-6 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold shadow-lg hover:shadow-primary/20 transition-all duration-300 active:scale-95" type="submit">
+                        Sign In to Dashboard
+                    </button>
+</form>
+</div>
+<p class="text-center mt-8 text-xs text-on-surface/40 font-medium">
+                © 2023 Financial Atelier Secure Access
+            </p>
+</div>
+</section>
+<!-- DASHBOARD SHELL (HIDDEN BY DEFAULT IN REAL LOGIC, BUT RENDERED FOR PREVIEW) -->
+<div class="hidden md:flex min-h-screen bg-surface" id="dashboard-container">
+<!-- NavigationDrawer -->
+<aside class="fixed left-0 top-0 h-full z-40 flex flex-col p-6 bg-surface dark:bg-[#1c1b1b] h-screen w-72 rounded-r-2xl shadow-[32px_0_32px_rgba(28,27,27,0.04)]">
+<div class="flex items-center gap-3 mb-12 px-2">
+<span class="material-symbols-outlined text-primary text-3xl">admin_panel_settings</span>
+<span class="text-lg font-black text-[#003ec7] font-headline">Prosper Admin</span>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-[#003ec7] rounded-xl font-bold font-headline text-sm transition-all duration-300" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/70 hover:translate-x-1 transition-transform font-medium font-headline text-sm" href="#">
+<span class="material-symbols-outlined">add_task</span>
+                    Task Factory
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/70 hover:translate-x-1 transition-transform font-medium font-headline text-sm" href="#">
+<span class="material-symbols-outlined">payments</span>
+                    Withdrawals
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/70 hover:translate-x-1 transition-transform font-medium font-headline text-sm" href="#">
+<span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+</nav>
+<div class="mt-auto pt-6 flex items-center gap-4 px-2">
+<img class="w-10 h-10 rounded-full object-cover border-2 border-primary/20" data-alt="professional portrait of a senior system administrator in a modern office setting, soft corporate lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeqVpmhk4r7u3H07EkWeA5OlBalyLVWkXpkzxpDU89sb1Y8nvi-adMiL7FDD287aAFlh5RuzKaaCOYCeVUwlX8Uo53ndhN7iTHlXYFTVJA4Z0bIJ_yb5sOh5j0o2JQuyJSwtex7fWctEjKi_0-ejwaHRzFt-ywUjyqiwLFnxwAov6XyVrouv6vnDGQyftn1G4NaFEcswhQWpYEH2SqtgFsV3YE34rLJ20SB5K5Po5CjKkUo3AVmHKg8_xTbslRZJl_DbNb4iztN4g"/>
+<div class="overflow-hidden">
+<p class="text-sm font-bold text-on-surface truncate">Lead Curator</p>
+<p class="text-[10px] text-on-surface/50 font-medium truncate uppercase tracking-tighter">Verified Access</p>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-72 flex-1 min-h-screen">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-12 py-6 w-full sticky top-0 bg-surface/80 backdrop-blur-md z-30 transition-colors">
+<div>
+<span class="text-[10px] uppercase tracking-widest font-headline font-bold text-primary block mb-1">Overview</span>
+<h2 class="text-2xl font-bold font-headline text-on-surface tracking-tight">Admin Panel</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant/30"></div>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container-high text-sm font-semibold text-on-surface">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                        Oct 24, 2023
+                    </button>
+</div>
+</header>
+<div class="px-12 pb-24 max-w-7xl mx-auto">
+<!-- Bento Stats Section -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+<div class="md:col-span-2 bg-gradient-to-br from-primary to-primary-container p-8 rounded-xl text-white shadow-xl flex flex-col justify-between min-h-[200px]">
+<span class="text-xs font-bold uppercase tracking-widest opacity-80">Total Ecosystem Value</span>
+<h3 class="text-5xl font-extrabold font-headline">৳482,900</h3>
+<div class="flex items-center gap-2 text-secondary-container font-bold text-sm mt-4">
+<span class="material-symbols-outlined">trending_up</span>
+<span>12% increase this month</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm flex flex-col justify-between">
+<span class="material-symbols-outlined text-secondary text-3xl">task_alt</span>
+<div>
+<p class="text-3xl font-bold text-on-surface">1,240</p>
+<p class="text-xs text-on-surface/50 font-semibold uppercase">Completed Tasks</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm flex flex-col justify-between">
+<span class="material-symbols-outlined text-primary text-3xl">pending_actions</span>
+<div>
+<p class="text-3xl font-bold text-on-surface">14</p>
+<p class="text-xs text-on-surface/50 font-semibold uppercase">Pending Payouts</p>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+<!-- Section 1: Create New Task -->
+<div class="lg:col-span-5 space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold font-headline text-on-surface">Create New Task</h3>
+<span class="material-symbols-outlined text-on-surface/30">add_circle</span>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl space-y-6">
+<div class="space-y-2">
+<label class="text-xs font-bold text-primary uppercase tracking-wide">Task Title</label>
+<input class="w-full px-4 py-3 rounded-lg bg-surface-container-lowest border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none text-on-surface text-sm" placeholder="e.g. Subscribe to YouTube" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-primary uppercase tracking-wide">Reward (৳)</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface/40 font-bold">৳</span>
+<input class="w-full pl-10 pr-4 py-3 rounded-lg bg-surface-container-lowest border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none text-on-surface text-sm" placeholder="50.00" type="number"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-primary uppercase tracking-wide">Work Link</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface/30 text-[18px]">link</span>
+<input class="w-full pl-10 pr-4 py-3 rounded-lg bg-surface-container-lowest border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none text-on-surface text-sm" placeholder="https://example.com/task" type="url"/>
+</div>
+</div>
+<button class="w-full py-4 bg-secondary text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-on-secondary-container transition-all active:scale-95 shadow-md">
+<span class="material-symbols-outlined">publish</span>
+                                Publish Task
+                            </button>
+</div>
+</div>
+<!-- Section 2: Pending Withdrawals -->
+<div class="lg:col-span-7 space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold font-headline text-on-surface">Pending Withdrawals</h3>
+<div class="flex items-center gap-2 px-3 py-1 bg-error-container/20 text-error rounded-full text-[10px] font-black uppercase tracking-tighter">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-error"></span>
+</span>
+                                Action Required
+                            </div>
+</div>
+<div class="space-y-4">
+<!-- Withdrawal Item 1 -->
+<div class="bg-surface-container-lowest p-5 rounded-xl flex items-center justify-between border border-outline-variant/10 group hover:border-primary/20 transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-high rounded-full flex items-center justify-center">
+<img class="w-8 h-8 object-contain opacity-70" data-alt="bKash logo icon minimalist pink and white branding" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjZ5zsm2IQaFj4RBGA_WgCrwwMziq6LlkDRMscOvm-XhsXBTH8ux5QKIy1fpoLpamae4FmJyZ9DbP_VFs4UoeEITMGJt68gQB27F_HEBNVihR1BR2KNSQ77FaZTg16snjRx4qDUSZMNF1XciZoNM-oIivfwAxoTm2SV3KQqqElc9C_Qi3eKW9Uh9BnnAaYE_fJi9XfUanqpzvFRRmVh1pkEYf2s0KGO9hOeiBg-UM5RH3OWm43Yr_W-rkHaH5-KIwh60rbPBd6EQk"/>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-lg font-extrabold text-on-surface font-headline">৳500.00</span>
+<span class="text-[10px] bg-secondary-container/30 text-on-secondary-container px-2 py-0.5 rounded-full font-bold">bKash</span>
+</div>
+<p class="text-xs text-on-surface/50 font-medium">Acc: 01712-345678 • 2 mins ago</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-4 py-2 text-xs font-bold text-error hover:bg-error-container/30 rounded-lg transition-colors">Reject</button>
+<button class="px-5 py-2 text-xs font-bold bg-primary text-white rounded-lg shadow-sm hover:shadow-primary/20 transition-all">Approve</button>
+</div>
+</div>
+<!-- Withdrawal Item 2 -->
+<div class="bg-surface-container-lowest p-5 rounded-xl flex items-center justify-between border border-outline-variant/10 group hover:border-primary/20 transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-high rounded-full flex items-center justify-center text-primary">
+<img class="w-8 h-8 object-contain opacity-70" data-alt="Nagad logo icon minimalist orange and white branding" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrbv3YBPB-1VnPBeft_gAuHIFa0IFdCXXhyAIps1Y5BMWxAGEEvWS5L2ZQ0kPdbztGRPq7xy3narE_oLfCsKVnfq_LL3MBBUoLc2Y9QUCEw1ZWaRcXWP2Uw4lRtLx9AjPEFNQrQ7_vbM4AsNiqZxM753hW-KzyJZGBcvci6vmyLDNQC2CPL-gnmbEAAl0Nuj50yYYxXCS4nZ-SA-_MucKDJHzdP0hbgd5g9sQahcf_farqoM_mxBWeAR2RlaVhWhHKOkckKmE8EqI"/>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-lg font-extrabold text-on-surface font-headline">৳1,200.00</span>
+<span class="text-[10px] bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded-full font-bold uppercase">Nagad</span>
+</div>
+<p class="text-xs text-on-surface/50 font-medium">Acc: 01955-112233 • 45 mins ago</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-4 py-2 text-xs font-bold text-error hover:bg-error-container/30 rounded-lg transition-colors">Reject</button>
+<button class="px-5 py-2 text-xs font-bold bg-primary text-white rounded-lg shadow-sm hover:shadow-primary/20 transition-all">Approve</button>
+</div>
+</div>
+<!-- Withdrawal Item 3 -->
+<div class="bg-surface-container-lowest p-5 rounded-xl flex items-center justify-between border border-outline-variant/10 group hover:border-primary/20 transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-high rounded-full flex items-center justify-center">
+<img class="w-8 h-8 object-contain opacity-70" data-alt="bKash logo icon minimalist pink and white branding" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvpVo3KXJbU0qnufQJae-JewBq_--vFVrHbfOI0iNQNhQqE74HRkzFltqRUBZ1fHMY8zmQQz0W3batY7kkMjEaVrNhocAXn1yl1laQRaxr2hXNjqhAAfNHXTnAIGpQtefGkD2D0tNTxgtHeNNZ4e8-tstx4x7MRJS41mbVobvHDt5cdIhdLW95s4H6YbXTe7pYDaxlkXsf1taWD3SP3RmqpGXJbPTV8THM3Ug0Rz0F0KN48GbilPp5Lt1RruLmPaMfrMhEy4Vga2I"/>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-lg font-extrabold text-on-surface font-headline">৳75.00</span>
+<span class="text-[10px] bg-secondary-container/30 text-on-secondary-container px-2 py-0.5 rounded-full font-bold">bKash</span>
+</div>
+<p class="text-xs text-on-surface/50 font-medium">Acc: 01511-998877 • 1 hour ago</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-4 py-2 text-xs font-bold text-error hover:bg-error-container/30 rounded-lg transition-colors">Reject</button>
+<button class="px-5 py-2 text-xs font-bold bg-primary text-white rounded-lg shadow-sm hover:shadow-primary/20 transition-all">Approve</button>
+</div>
+</div>
+</div>
+<button class="w-full py-4 border border-outline-variant/30 text-on-surface/50 text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-surface-container-low transition-colors">
+                            Load 12 More Requests
+                        </button>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- MOBILE NAVIGATION (Visible only on small screens) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-white/80 dark:bg-[#1c1b1b]/80 backdrop-blur-xl rounded-t-[1.5rem] shadow-[0_-10px_32px_rgba(28,27,27,0.04)]">
+<a class="flex flex-col items-center justify-center text-primary-container" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-headline text-[10px] font-bold tracking-wide">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1b1b]/40" href="#">
+<span class="material-symbols-outlined">list_alt</span>
+<span class="font-headline text-[10px] font-bold tracking-wide">Tasks</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1b1b]/40" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-headline text-[10px] font-bold tracking-wide">Payouts</span>
+</a>
+</nav>
+<!-- Overlay toggle simulation: In a real app, JS would toggle the 'hidden' class on login-screen and dashboard-container -->
 <script>
-const firebaseConfig = {
-apiKey: "AIzaSyAtYq8JTQXdMmrwhc3W96g7KfqThZcTA_4",
-authDomain: "onlineincome-326f9.firebaseapp.com",
-databaseURL: "https://onlineincome-326f9-default-rtdb.firebaseio.com",
-projectId: "onlineincome-326f9"
-};
-
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.database();
-
-function login(){
-auth.signInWithEmailAndPassword(
-document.getElementById('email').value,
-document.getElementById('pass').value
-).catch(e=>alert(e.message));
-}
-
-auth.onAuthStateChanged(user=>{
-if(user){
-db.ref('admins/'+user.uid).once('value').then(snap=>{
-if(snap.exists()){
-document.getElementById('login-card').style.display="none";
-document.getElementById('dashboard').style.display="block";
-loadWithdraw();
-}else{
-alert("Not Admin");
-auth.signOut();
-}
-});
-}
-});
-
-function addTask(){
-const t = title.value;
-const r = parseFloat(reward.value);
-const l = link.value;
-
-if(!t || !r || !l) return alert("Fill all");
-
-db.ref('tasks').push({title:t,reward:r,link:l});
-alert("Task Added");
-}
-
-function loadWithdraw(){
-db.ref('withdrawRequests').on('value',snap=>{
-let html="";
-const data=snap.val();
-
-for(let uid in data){
-for(let id in data[uid]){
-let w=data[uid][id];
-html+=`
-<div class="bg-white p-3 mb-2">
-<p>৳${w.amount} - ${w.number}</p>
-<button onclick="approve('${uid}','${id}',${w.amount})">Approve</button>
-<button onclick="reject('${uid}','${id}')">Reject</button>
-</div>`;
-}
-}
-withdraw-list.innerHTML=html;
-});
-}
-
-function approve(uid,id,amount){
-db.ref('withdrawRequests/'+uid+'/'+id+'/status').set('approved');
-db.ref('users/'+uid+'/balance').transaction(b=>(b||0)-amount);
-}
-
-function reject(uid,id){
-db.ref('withdrawRequests/'+uid+'/'+id+'/status').set('rejected');
-}
-
-function logout(){
-auth.signOut();
-location.reload();
-}
-</script>
-
-</body>
-</html>
+        // Placeholder for the toggle logic mentioned in task: 
+        // Logic to show dashboard after "login" click
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('dashboard-container').classList.remove('hidden');
+            document.getElementById('dashboard-container').classList.add('flex');
+        });
+    </script>
+</body></html>
