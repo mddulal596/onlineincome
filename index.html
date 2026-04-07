@@ -1,169 +1,162 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prosper - Home</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #fcf9f8; }
-        .font-headline { font-family: 'Manrope', sans-serif; }
+<!-- IMPORTANT: Rename this file to index.html and place it in your GitHub root folder --><!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<title>Prosper - Initializing</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#0052FF",
+              "on-primary": "#ffffff",
+              "surface": "#fcf9f8",
+              "on-surface": "#1c1b1b",
+              "on-surface-variant": "#434656",
+              "outline": "#737688",
+              "primary-container": "#dfe3ff",
+              "secondary-container": "#5cfd80",
+              "on-secondary-container": "#00732c",
+            },
+            fontFamily: {
+              "headline": ["Manrope", "sans-serif"],
+              "body": ["Inter", "sans-serif"],
+              "label": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "3xl": "1.5rem", "full": "9999px"},
+            animation: {
+              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      @keyframes progressFill {
+        from { width: 0%; }
+        to { width: 100%; }
+      }
+      .animate-progress {
+        animation: progressFill 3s ease-in-out forwards;
+      }
+      .glow-effect {
+        box-shadow: 0 0 40px 10px rgba(0, 82, 255, 0.15);
+      }
     </style>
 </head>
-<body class="pb-32">
-    <header class="p-6 flex justify-between items-center bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
-        <h1 class="text-xl font-black text-[#003ec7] tracking-tighter font-headline">Prosper</h1>
-        <div class="flex items-center gap-3">
-            <div class="text-right">
-                <p class="text-[10px] font-bold text-gray-400 uppercase">Welcome</p>
-                <p id="user-display-name" class="text-xs font-black text-gray-800">Loading...</p>
-            </div>
-            <div class="w-10 h-10 rounded-full bg-blue-50 border overflow-hidden">
-                <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=003ec7&color=fff" class="w-full h-full object-cover">
-            </div>
-        </div>
-    </header>
-
-    <main class="p-6 max-w-5xl mx-auto space-y-8">
-        <section class="bg-gradient-to-br from-[#003ec7] to-[#0052ff] rounded-[40px] p-8 text-white shadow-2xl relative overflow-hidden">
-            <p class="text-xs font-bold opacity-70 uppercase tracking-widest mb-1">Total Balance</p>
-            <h3 id="user-balance" class="text-5xl font-black">৳ 0.00</h3>
-            <div class="absolute -right-4 -bottom-4 opacity-10">
-                <span class="material-symbols-outlined text-9xl">payments</span>
-            </div>
-        </section>
-
-        <section>
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-black text-gray-800 font-headline">Featured Tasks</h3>
-                <a href="tasks.html" class="text-blue-600 text-sm font-bold">View All</a>
-            </div>
-            <div id="featured-tasks-container" class="space-y-4">
-                <p class="text-center text-gray-400 py-10">Loading tasks...</p>
-            </div>
-        </section>
-    </main>
-
-    <nav class="fixed bottom-6 left-6 right-6 bg-white/90 backdrop-blur-xl border border-white/20 h-20 rounded-[32px] shadow-2xl flex items-center justify-around z-50">
-        <a href="index.html" class="flex flex-col items-center gap-1 text-blue-600">
-            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">home</span>
-            <span class="text-[10px] font-black">HOME</span>
-        </a>
-        <a href="tasks.html" class="flex flex-col items-center gap-1 text-gray-400">
-            <span class="material-symbols-outlined">explore</span>
-            <span class="text-[10px] font-bold">TASKS</span>
-        </a>
-        <a href="wallet.html" class="flex flex-col items-center gap-1 text-gray-400">
-            <span class="material-symbols-outlined">account_balance_wallet</span>
-            <span class="text-[10px] font-bold">WALLET</span>
-        </a>
-        <a href="profile.html" class="flex flex-col items-center gap-1 text-gray-400">
-            <span class="material-symbols-outlined">person</span>
-            <span class="text-[10px] font-bold">PROFILE</span>
-        </a>
-    </nav>
-
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-
-    <script>
+<body class="bg-surface text-on-surface font-body min-h-screen flex flex-col items-center justify-center overflow-hidden">
+<!-- Main Branding Container -->
+<main class="relative w-full max-w-lg px-6 flex flex-col items-center">
+<!-- Background Soft Texture -->
+<div class="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] aspect-square opacity-20 blur-[100px] bg-gradient-to-tr from-primary/20 via-transparent to-transparent"></div>
+<!-- Logo Icon Block -->
+<div class="mb-12 relative group">
+<div class="w-32 h-32 rounded-[2.5rem] bg-gradient-to-br from-primary to-blue-700 flex items-center justify-center glow-effect relative overflow-hidden animate-pulse-slow">
+<span class="material-symbols-outlined text-on-primary text-6xl" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<!-- Subtle reflective overlay -->
+<div class="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent pointer-events-none"></div>
+</div>
+<!-- Decorative Accent -->
+<div class="absolute -right-2 -bottom-2 w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center shadow-lg border-4 border-surface">
+<span class="material-symbols-outlined text-on-secondary-container text-xl" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+</div>
+</div>
+<!-- Identity Section -->
+<div class="text-center space-y-4">
+<p class="font-label text-primary text-xs font-bold tracking-[0.25em] uppercase">Financial Atelier</p>
+<h1 class="font-headline text-5xl md:text-6xl font-extrabold tracking-tighter text-on-surface">
+                Prosper<span class="text-primary">.</span>
+</h1>
+<p class="text-on-surface-variant font-medium text-lg leading-relaxed max-w-xs mx-auto">
+                Crafting your wealth through intentional earning and growth.
+            </p>
+</div>
+<!-- Progress Tracking Area -->
+<div class="mt-20 w-full max-w-[280px] space-y-4">
+<div class="h-1.5 w-full bg-black/5 rounded-full overflow-hidden">
+<div class="h-full bg-primary animate-progress rounded-full" id="progress-bar"></div>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="font-label text-[11px] text-outline font-bold tracking-widest uppercase" id="progress-text">Initializing Vault...</span>
+<span class="font-headline text-xs font-bold text-primary" id="percentage-text">0%</span>
+</div>
+</div>
+</main>
+<!-- Footer Identity -->
+<footer class="fixed bottom-12 w-full text-center">
+<div class="inline-flex items-center gap-4 text-outline/30">
+<div class="h-px w-8 bg-current"></div>
+<span class="font-label text-[10px] tracking-[0.3em] uppercase">By Atelier Collective</span>
+<div class="h-px w-8 bg-current"></div>
+</div>
+</footer>
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script>
+        // Exact Firebase configuration for GitHub Pages optimization
         const firebaseConfig = {
             apiKey: "AIzaSyAtYq8JTQXdMmrwhc3W96g7KfqThZcTA_4",
             authDomain: "onlineincome-326f9.firebaseapp.com",
-            databaseURL: "https://onlineincome-326f9-default-rtdb.firebaseio.com",
             projectId: "onlineincome-326f9",
             storageBucket: "onlineincome-326f9.firebasestorage.app",
             messagingSenderId: "79088960253",
-            appId: "1:79088960253:web:4a39dbe9d3207ccca1f494"
+            appId: "1:79088960253:web:4a39dbe9d3207ccca1f494",
+            measurementId: "G-2DQF1FCGRW"
         };
 
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.database();
+        firebase.analytics();
 
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                // ✅ USER AUTO CREATE (If not exists)
-                db.ref('users/' + user.uid).once('value').then(snap => {
-                    if (!snap.exists()) {
-                        db.ref('users/' + user.uid).set({
-                            name: "User",
-                            email: user.email,
-                            balance: 0,
-                            tasksDone: 0,
-                            createdAt: Date.now()
-                        });
-                    }
-                });
+        // Professional loading animation logic (3 seconds)
+        const percentageText = document.getElementById('percentage-text');
+        const progressText = document.getElementById('progress-text');
+        let currentPercent = 0;
+        const duration = 3000; // 3 seconds total
+        const interval = 30; // Update every 30ms
+        const step = 100 / (duration / interval);
 
-                // ✅ REAL-TIME UI UPDATE (Name, Balance, Image)
-                db.ref('users/' + user.uid).on('value', snap => {
-                    const data = snap.val() || {};
-                    const name = data.name || "User";
-                    document.getElementById('user-display-name').innerText = name;
-                    document.getElementById('user-balance').innerText = "৳ " + (data.balance || 0).toFixed(2);
-                    document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=003ec7&color=fff&bold=true`;
-                });
+        const statusMessages = [
+            "Initializing Vault...",
+            "Securing Connection...",
+            "Loading Portfolio...",
+            "Readying Workspace..."
+        ];
 
-                // ✅ DAILY BONUS
-                giveDailyBonus(user.uid);
-
-                // ✅ TASK LOAD
-                loadFeaturedTasks();
-
-            } else {
-                window.location.href = "login.html";
+        const timer = setInterval(() => {
+            currentPercent += step;
+            
+            // Update percentage
+            if (currentPercent >= 100) {
+                currentPercent = 100;
+                clearInterval(timer);
+                
+                // Redirect to login.html after animation completes
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 300);
             }
-        });
+            
+            percentageText.textContent = Math.floor(currentPercent) + '%';
 
-        function loadFeaturedTasks() {
-            db.ref('tasks').limitToFirst(3).on('value', snap => {
-                const tasks = snap.val();
-                const container = document.getElementById('featured-tasks-container');
+            // Dynamic status message updates based on progress
+            if (currentPercent > 25 && currentPercent < 50) progressText.textContent = statusMessages[1];
+            if (currentPercent > 50 && currentPercent < 75) progressText.textContent = statusMessages[2];
+            if (currentPercent > 75) progressText.textContent = statusMessages[3];
 
-                if (!tasks) {
-                    container.innerHTML = "<p class='text-center text-gray-400 py-10'>No tasks available right now.</p>";
-                    return;
-                }
-
-                container.innerHTML = Object.keys(tasks).map(key => {
-                    const task = tasks[key];
-                    return `
-                    <div onclick="window.location.href='task-details.html?id=${key}'"
-                    class="block bg-white p-6 rounded-3xl shadow-sm border border-gray-50 hover:border-blue-100 hover:shadow-md transition-all group cursor-pointer">
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-[#003ec7]">
-                                    <span class="material-symbols-outlined text-2xl">assignment</span>
-                                </div>
-                                <div>
-                                    <span class="text-[9px] font-black text-blue-600 uppercase tracking-tighter">${task.type || 'TASK'}</span>
-                                    <h4 class="font-bold text-gray-800 text-base">${task.title}</h4>
-                                    <p class="text-xs text-gray-400">Earn ৳${parseFloat(task.reward).toFixed(2)}</p>
-                                </div>
-                            </div>
-                            <span class="material-symbols-outlined text-gray-300 group-hover:text-blue-600 transition-all">chevron_right</span>
-                        </div>
-                    </div>`;
-                }).join('');
-            });
-        }
-
-        function giveDailyBonus(uid) {
-            const today = new Date().toDateString();
-            db.ref('dailyBonus/' + uid).once('value').then(snap => {
-                if (snap.val() === today) return;
-                
-                db.ref('dailyBonus/' + uid).set(today);
-                db.ref('users/' + uid + '/balance').transaction(b => (b || 0) + 10);
-                
-                // Optional: Notify user
-                console.log("৳10 Daily bonus added!");
-            });
-        }
+        }, interval);
     </script>
-</body>
-    </html>
+</body></html>
